@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Petthy.Data;
 using Petthy.Models.Professional;
 
 namespace Petthy.Areas.Identity.Pages.Account
@@ -22,20 +23,20 @@ namespace Petthy.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _dbContext;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext dbContext,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _roleManager = roleManager;
+            _dbContext = dbContext;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -98,10 +99,19 @@ namespace Petthy.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new Professional { FirstName = Input.FirstName, LastName = Input.LastName, Workplace = Input.Workplace, ProfessionalRoleId = Input.Position, UserName = Input.Email, Email = Input.Email };
+                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                var professional = new Professional
+                {
+                    UserId = _userManager.GetUserId(User),
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Workplace = Input.Workplace,
+                    ProfessionalRoleId = Input.Position
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
+                    _dbContext.Professionals.Add(professional);
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, "professional");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
