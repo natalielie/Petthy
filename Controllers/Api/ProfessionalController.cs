@@ -12,6 +12,8 @@ using Petthy.Models.Pet;
 using Petthy.Models.Request;
 using Petthy.Models.Response;
 using Microsoft.AspNetCore.Identity;
+using Petthy.Models;
+using Petthy.Models.SmartDevice;
 
 namespace Petthy.Controllers.Api
 {
@@ -19,16 +21,18 @@ namespace Petthy.Controllers.Api
     [ApiController]
     public class ProfessionalController : ControllerBase
     {
-        private readonly UserManager<Professional> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public ProfessionalController(ApplicationDbContext dbContext, UserManager<Professional> userManager)
+        public ProfessionalController(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
         }
 
-       /* [HttpPost]
+        // Schedule //
+
+        [HttpPost]
         [Route("addVacantDatesToSchedule")]
         public void addVacantDatesToSchedule(AddingVacantDatesToScheduleRequestModel request)
         {
@@ -43,26 +47,6 @@ namespace Petthy.Controllers.Api
                 Weekday = request.Weekday,
                 DateTimeBegin = request.DateTimeBegin,
                 DateTimeEnd = request.DateTimeEnd
-            };
-
-            _dbContext.ProfessionalSchedules.Add(schedule);
-            _dbContext.SaveChanges();
-        }*/
-        [HttpPost]
-        [Route("addVacantDatesToSchedule")]
-        public void addVacantDatesToSchedule(string Weekday, DateTime DateTimeBegin, DateTime DateTimeEnd)
-        {
-            string userIdStringified = _userManager.GetUserId(User);
-
-            int userId = int.Parse(userIdStringified);
-
-
-            ProfessionalSchedule schedule = new ProfessionalSchedule
-            {
-                ProfessionalId = userId,
-                Weekday = Weekday,
-                DateTimeBegin = DateTimeBegin,
-                DateTimeEnd = DateTimeEnd
             };
 
             _dbContext.ProfessionalSchedules.Add(schedule);
@@ -82,18 +66,20 @@ namespace Petthy.Controllers.Api
             return responseModels;
         }
 
+        // assignment //
 
         [HttpPost]
         [Route("assignPetToDoctor")]
         public void AssignPetToDoctor(PetAssignmentRequestModel request)
         {
-            string userIdStringified = _userManager.GetUserId(User);
+            /*string userIdStringified = _userManager.GetUserId(User);
 
-            int userId = int.Parse(userIdStringified);
+            int userId = int.Parse(userIdStringified);*/
+
 
             Pet pet = _dbContext.Pets.Find(request.PetId);
 
-            if (pet.ClientId != userId)
+            if (pet.ClientId != 1)
             {
                 throw new ArgumentException("Pet doesn't belong to the current user.");
             }
@@ -105,6 +91,7 @@ namespace Petthy.Controllers.Api
             };
 
             _dbContext.PetAssignments.Add(assignment);
+            _dbContext.SaveChanges();
         }
 
         [HttpGet]
@@ -132,23 +119,112 @@ namespace Petthy.Controllers.Api
             }
 
             _dbContext.PetAssignments.Remove(chosenPet);
-            _dbContext.PetAssignments.Update(chosenPet);
+            //_dbContext.PetAssignments.Update(chosenPet);
             _dbContext.SaveChanges();
         }
 
-        /* [HttpGet]
+        // Appointments //
+
+         [HttpGet]
          [Route("getProfessionalSchedule")]
          public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
          {
-             List<ProfessionalAppointment> professionalAppointments = _dbContext.ProfessionalAppointments.Where(
+             List<Appointment> professionalAppointments = _dbContext.Appointments.Where(
                  x => x.ProfessionalId == professionalId).ToList();
 
              List<AppointmentAddingResponseModel> responseModels = professionalAppointments
-                 .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.AppointmentDateTime))
+                 .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.Date))
                  .ToList();
 
              return responseModels;
-         }*/
+         }
+
+        [HttpPost]
+        [Route("addAppointment")]
+        public void addAppointment(AppointmentAddingRequestModel request)
+        {
+            /*string userIdStringified = _userManager.GetUserId(User);
+
+            int userId = int.Parse(userIdStringified);*/
+
+
+            Appointment appointment = new Appointment
+            {
+                PetId = request.PetId,
+                ProfessionalId = request.ProfessionalId,
+                Date = request.AppointmentDateTime
+            };
+
+            _dbContext.Appointments.Add(appointment);
+            _dbContext.SaveChanges();
+        }
+
+       /* [HttpGet]
+        [Route("getProfessionalAppointment")]
+        public void getProfessionalAppointment(int professionalId)
+        {
+            /*string userIdStringified = _userManager.GetUserId(User);
+
+            int userId = int.Parse(userIdStringified);*/
+
+
+           /* public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
+            {
+                List<ProfessionalAppointment> professionalAppointments = _dbContext.ProfessionalAppointments.Where(
+                    x => x.ProfessionalId == professionalId).ToList();
+
+                List<AppointmentAddingResponseModel> responseModels = professionalAppointments
+                    .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.AppointmentDateTime))
+                    .ToList();
+
+                return responseModels;
+            }
+        }*/
+
+        [HttpPost]
+        [Route("changeAppointment")]
+        public void changeAppointment(AppointmentAddingRequestModel request)
+        {
+            /*string userIdStringified = _userManager.GetUserId(User);
+
+            int userId = int.Parse(userIdStringified);*/
+
+
+            Appointment appointment = _dbContext.Appointments.Find(
+                request.ProfessionalId, request.PetId, request.AppointmentDateTime);
+
+            Appointment newAppointment = new Appointment
+            {
+                PetId = request.PetId,
+                ProfessionalId = request.ProfessionalId,
+                Date = request.NewAppointmentDateTime
+            };
+
+            if (appointment == null)
+            {
+                throw new ArgumentException("Something went wrong. Try again");
+            }
+            _dbContext.Entry(appointment).CurrentValues.SetValues(newAppointment);
+            _dbContext.SaveChanges();
+        }
+
+        [HttpDelete]
+        [Route("DeleteAppointment")]
+        public void DeleteAppointment(AppointmentAddingRequestModel request)
+        {
+            Appointment appointment = _dbContext.Appointments.Find(request.ProfessionalId, request.PetId, request.AppointmentDateTime);
+
+            if (appointment == null)
+            {
+                throw new ArgumentException("There was an error. Try again");
+            }
+
+            _dbContext.Appointments.Remove(appointment);
+            //_dbContext.PetAssignments.Update(chosenPet);
+            _dbContext.SaveChanges();
+        }
+
+        // Profile editing //
 
         [HttpPost]
         [Route("ChangeProfessionalAccount")]
@@ -163,7 +239,7 @@ namespace Petthy.Controllers.Api
 
             chosenProfessionalAccount.FirstName = request.FirstName;
             chosenProfessionalAccount.LastName = request.LastName;
-            chosenProfessionalAccount.Email = request.Email;
+            //chosenProfessionalAccount.Email = request.Email;
             chosenProfessionalAccount.PhoneNumber = request.PhoneNumber;
             //chosenProfessionalAccount.Password = request.Password;
             chosenProfessionalAccount.Workplace = request.Workplace;
@@ -186,6 +262,86 @@ namespace Petthy.Controllers.Api
 
             _dbContext.Professionals.Remove(chosenProfessional);
             _dbContext.Professionals.Update(chosenProfessional);
+            _dbContext.SaveChanges();
+        }
+
+        // MedNotes //
+
+        [HttpPost]
+        [Route("addMedNote")]
+        public void addMedNote(MedNoteRequest request)
+        {
+            //string userIdStringified = _userManager.GetUserId(User);
+
+            //int userId = int.Parse(userIdStringified);
+
+        PetMedCardNote medCardNote = new PetMedCardNote
+            {
+                PetId = request.PetId,
+                Illness = request.Illness,
+                Treatment = request.Treatment,
+                Comment = request.Comment,
+                NoteDate = request.NoteDate
+            };
+
+            _dbContext.PetMedCardNotes.Add(medCardNote);
+            _dbContext.SaveChanges();
+        }
+
+        [HttpGet]
+        [Route("getMedNote")]
+        public List<MedNoteResponseModel> getPetMedNotes(int petId)
+        {
+            List<PetMedCardNote> medNotes = _dbContext.PetMedCardNotes.Where(x => x.PetId == petId).ToList();
+
+            List<MedNoteResponseModel> responseModels = medNotes
+                .Select(x => new MedNoteResponseModel(x.PetMedCardNoteId, x.PetId, 
+                x.Illness, x.Treatment, x.Comment, x.NoteDate))
+                .ToList();
+            return responseModels;
+        }
+
+        [HttpGet]
+        [Route("checkSmartDeviceDataByPet")]
+        public List<SmartDeviceDataResponseModel> checkPetSmartDeviceDataByPetId(int petId)
+        {
+            List<SmartDeviceData> medNotes = _dbContext.SmartDeviceData.Where(x => x.PetId == petId).ToList();
+
+            List<SmartDeviceDataResponseModel> responseModels = medNotes
+                .Select(x => new SmartDeviceDataResponseModel(x.SmartDeviceDataId, x.PetId,
+                x.IsIll, x.IsEnoughWalking, x.SmartDeviceDataDate))
+                .ToList();
+            return responseModels;
+        }
+
+        [HttpGet]
+        [Route("checkSmartDeviceDataByDate")]
+        public List<SmartDeviceDataResponseModel> checkSmartDeviceDataByDate(int petId, DateTime date)
+        {
+            List<SmartDeviceData> medNotes = _dbContext.SmartDeviceData.Where(x => x.PetId == petId
+            && x.SmartDeviceDataDate == date).ToList();
+
+            List<SmartDeviceDataResponseModel> responseModels = medNotes
+                .Select(x => new SmartDeviceDataResponseModel(x.SmartDeviceDataId, x.PetId,
+                x.IsIll, x.IsEnoughWalking, x.SmartDeviceDataDate))
+                .ToList();
+            return responseModels;
+        }
+
+        // only for admin
+        [HttpDelete]
+        [Route("DeleteMedNote")]
+        public void DeleteMedNote(int medNoteId)
+        {
+            PetMedCardNote chosenMedNote = _dbContext.PetMedCardNotes.Find(medNoteId);
+
+            if (chosenMedNote == null)
+            {
+                throw new ArgumentException("There was an error. Try again");
+            }
+
+            _dbContext.PetMedCardNotes.Remove(chosenMedNote);
+            _dbContext.PetMedCardNotes.Update(chosenMedNote);
             _dbContext.SaveChanges();
         }
     }

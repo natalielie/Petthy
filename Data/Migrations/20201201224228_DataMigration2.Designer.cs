@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petthy.Data;
 
 namespace Petthy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201201224228_DataMigration2")]
+    partial class DataMigration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -462,30 +464,6 @@ namespace Petthy.Data.Migrations
                     b.HasKey("ProfessionalId", "Weekday", "DateTimeBegin", "DateTimeEnd");
 
                     b.ToTable("ProfessionalSchedules");
-                });
-
-            modelBuilder.Entity("Petthy.Models.SmartDevice.SmartDeviceData", b =>
-                {
-                    b.Property<int>("SmartDeviceDataId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsEnoughWalking")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsIll")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SmartDeviceDataDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SmartDeviceDataId");
-
-                    b.ToTable("SmartDeviceData");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

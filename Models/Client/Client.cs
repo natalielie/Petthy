@@ -13,17 +13,20 @@ namespace Petthy.Models
         public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Address { get; set; }
 
         public Client() { }
         public Client(int clientId, string userId, string firstName, string lastName, 
-            DateTime dateOfBirth, string address)
+
+            string phoneNumber, DateTime dateOfBirth, string address)
         {
             this.ClientId = clientId;
             this.UserId = userId;
             this.FirstName = firstName;
             this.LastName = lastName;
+            this.PhoneNumber = phoneNumber;
             this.DateOfBirth = dateOfBirth;
             this.Address = address;
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Petthy.Models;
 using Petthy.Models.Pet;
 using Petthy.Models.Professional;
+using Petthy.Models.SmartDevice;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Petthy.Data
         public DbSet<Pet> Pets { get; set; }
         public DbSet<PetDiaryNote> PetDiaryNotes { get; set; }
         public DbSet<PetMedCardNote> PetMedCardNotes { get; set; }
+        public DbSet<SmartDeviceData> SmartDeviceData { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<ProfessionalRole> ProfessionalRoles { get; set; }
         public DbSet<ProfessionalSchedule> ProfessionalSchedules { get; set; }
@@ -39,6 +41,29 @@ namespace Petthy.Data
             modelBuilder.Entity<ProfessionalSchedule>()
                 .HasKey(c => new { c.ProfessionalId, c.Weekday, c.DateTimeBegin, c.DateTimeEnd });
 
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    ClientId = 1,
+                    FirstName = "Tyler",
+                    LastName = "Joseph",
+                    PhoneNumber = "+40097656789",
+                    DateOfBirth = DateTime.Parse("1988-12-01"),
+                    Address = "Riverside st, 33b"
+                }
+            );
+
+            modelBuilder.Entity<Client>().HasData(
+                new Client
+                {
+                    ClientId = 2,
+                    FirstName = "Joshua",
+                    LastName = "Dun",
+                    PhoneNumber = "+40054776512",
+                    DateOfBirth = DateTime.Parse("1988-06-12"),
+                    Address = "Riverside st, 33a"
+                }
+            );
         }
     }
 }

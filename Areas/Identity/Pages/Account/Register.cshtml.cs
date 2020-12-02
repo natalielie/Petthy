@@ -100,17 +100,21 @@ namespace Petthy.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-                var professional = new Professional
-                {
-                    UserId = _userManager.GetUserId(User),
-                    FirstName = Input.FirstName,
-                    LastName = Input.LastName,
-                    Workplace = Input.Workplace,
-                    ProfessionalRoleId = Input.Position
-                };
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                var id = user.Id;
+
                 if (result.Succeeded)
                 {
+                    var professional = new Professional
+                    {
+                        UserId = id,
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        PhoneNumber = Input.PhoneNumber,
+                        Workplace = Input.Workplace,
+                        ProfessionalRoleId = Input.Position
+                    };
                     _dbContext.Professionals.Add(professional);
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, "professional");

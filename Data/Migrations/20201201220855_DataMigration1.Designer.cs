@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petthy.Data;
 
 namespace Petthy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201201220855_DataMigration1")]
+    partial class DataMigration1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,35 +257,12 @@ namespace Petthy.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientId");
 
                     b.ToTable("Clients");
-
-                    b.HasData(
-                        new
-                        {
-                            ClientId = 1,
-                            Address = "Riverside st, 33b",
-                            DateOfBirth = new DateTime(1988, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Tyler",
-                            LastName = "Joseph",
-                            PhoneNumber = "+40097656789"
-                        },
-                        new
-                        {
-                            ClientId = 2,
-                            Address = "Riverside st, 33a",
-                            DateOfBirth = new DateTime(1988, 6, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Joshua",
-                            LastName = "Dun",
-                            PhoneNumber = "+40054776512"
-                        });
                 });
 
             modelBuilder.Entity("Petthy.Models.Pet.Pet", b =>
@@ -397,9 +376,6 @@ namespace Petthy.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("ProfessionalRoleId")
                         .HasColumnType("int");
 
@@ -462,30 +438,6 @@ namespace Petthy.Data.Migrations
                     b.HasKey("ProfessionalId", "Weekday", "DateTimeBegin", "DateTimeEnd");
 
                     b.ToTable("ProfessionalSchedules");
-                });
-
-            modelBuilder.Entity("Petthy.Models.SmartDevice.SmartDeviceData", b =>
-                {
-                    b.Property<int>("SmartDeviceDataId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("IsEnoughWalking")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsIll")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PetId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("SmartDeviceDataDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("SmartDeviceDataId");
-
-                    b.ToTable("SmartDeviceData");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

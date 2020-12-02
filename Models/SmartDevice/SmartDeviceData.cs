@@ -7,8 +7,10 @@ namespace Petthy.Models.SmartDevice
 {
     public class SmartDeviceData
     {
-        public int Pulse { get; set; }
-        public int Temperature { get; set; }
-        public float[] GPS { get; set; }
+        public int SmartDeviceDataId { get; set; }
+        public int PetId { get; set; }
+        public bool IsIll { get; set; }
+        public bool IsEnoughWalking { get; set; }
+        public DateTime SmartDeviceDataDate { get; set; }
     }
 }

@@ -13,17 +13,19 @@ namespace Petthy.Models.Professional
         public string UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
         public string Workplace { get; set; }
         public int ProfessionalRoleId { get; set; }
 
         public Professional() { }
         public Professional(int professionalId, string userId, string firstName, 
-            string lastName, string workplace, int professionalRoleId)
+            string lastName, string phoneNumber, string workplace, int professionalRoleId)
         {
             this.ProfessionalId = professionalId;
             this.UserId = userId;
             this.FirstName = firstName;
             this.LastName = lastName;
+            this.PhoneNumber = phoneNumber;
             this.Workplace = workplace;
             this.ProfessionalRoleId = professionalRoleId;
         }
