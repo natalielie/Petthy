@@ -19,15 +19,18 @@ namespace Petthy.Controllers.Api
 {
     [Route("api/doctor")]
     [ApiController]
-    public class ProfessionalController : ControllerBase
+    public class VeterinerianController : ControllerBase
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
 
-        public ProfessionalController(ApplicationDbContext dbContext, UserManager<IdentityUser> userManager)
+        public VeterinerianController(ApplicationDbContext dbContext,
+            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // Schedule //
@@ -37,13 +40,13 @@ namespace Petthy.Controllers.Api
         public void addVacantDatesToSchedule(AddingVacantDatesToScheduleRequestModel request)
         {
             string userIdStringified = _userManager.GetUserId(User);
-
-            int userId = int.Parse(userIdStringified);
+            //int userId = int.Parse(userIdStringified);
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
 
 
             ProfessionalSchedule schedule = new ProfessionalSchedule
             {
-                ProfessionalId = userId,
+                ProfessionalId = currentUser.ProfessionalId,
                 Weekday = request.Weekday,
                 DateTimeBegin = request.DateTimeBegin,
                 DateTimeEnd = request.DateTimeEnd
@@ -55,12 +58,18 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getSchedule")]
-        public List<ProfessionalScheduleResponseModel> getVacantDatesOfSchedule(int professionalId)
+        public List<ProfessionalScheduleResponseModel> getVacantDatesOfSchedule()
         {
-            List<ProfessionalSchedule> schedules = _dbContext.ProfessionalSchedules.Where(x => x.ProfessionalId == professionalId).ToList();
+            string userIdStringified = _userManager.GetUserId(User);
+            //int userId = int.Parse(userIdStringified);
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
+
+            List<ProfessionalSchedule> schedules = _dbContext.ProfessionalSchedules.Where(
+                x => x.ProfessionalId == currentUser.ProfessionalId).ToList();
 
             List<ProfessionalScheduleResponseModel> responseModels = schedules
-                .Select(x => new ProfessionalScheduleResponseModel(x.ProfessionalId, x.Weekday, x.DateTimeBegin, x.DateTimeEnd))
+                .Select(x => new ProfessionalScheduleResponseModel(
+                    x.ProfessionalId, x.Weekday, x.DateTimeBegin, x.DateTimeEnd))
                 .ToList();
 
             return responseModels;
@@ -72,9 +81,7 @@ namespace Petthy.Controllers.Api
         [Route("assignPetToDoctor")]
         public void AssignPetToDoctor(PetAssignmentRequestModel request)
         {
-            /*string userIdStringified = _userManager.GetUserId(User);
-
-            int userId = int.Parse(userIdStringified);*/
+            string userIdStringified = _userManager.GetUserId(User);
 
 
             Pet pet = _dbContext.Pets.Find(request.PetId);
@@ -107,6 +114,21 @@ namespace Petthy.Controllers.Api
             return responseModels;
         }
 
+        /*[HttpGet]
+        [Route("getVeterineriansAssignments")]
+        public List<PetAssignmentResponseModel> getVeterineriansAssignments()
+        {
+            string userIdStringified = _userManager.GetUserId(User);
+
+            List<PetAssignment> petAssignments = _dbContext.PetAssignments.Where(x => x.ProfessionalId == userId).ToList();
+
+            List<PetAssignmentResponseModel> responseModels = petAssignments
+                .Select(x => new PetAssignmentResponseModel(x.PetId, x.ProfessionalId))
+                .ToList();
+
+            return responseModels;
+        }*/
+
         [HttpDelete]
         [Route("DeletePetAssignment")]
         public void DeletePetAssignment(PetAssignmentRequestModel request)
@@ -125,19 +147,19 @@ namespace Petthy.Controllers.Api
 
         // Appointments //
 
-         [HttpGet]
-         [Route("getProfessionalSchedule")]
-         public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
-         {
-             List<Appointment> professionalAppointments = _dbContext.Appointments.Where(
-                 x => x.ProfessionalId == professionalId).ToList();
+        [HttpGet]
+        [Route("getProfessionalSchedule")]
+        public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
+        {
+            List<Appointment> professionalAppointments = _dbContext.Appointments.Where(
+                x => x.ProfessionalId == professionalId).ToList();
 
-             List<AppointmentAddingResponseModel> responseModels = professionalAppointments
-                 .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.Date))
-                 .ToList();
+            List<AppointmentAddingResponseModel> responseModels = professionalAppointments
+                .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.Date))
+                .ToList();
 
-             return responseModels;
-         }
+            return responseModels;
+        }
 
         [HttpPost]
         [Route("addAppointment")]
@@ -159,27 +181,27 @@ namespace Petthy.Controllers.Api
             _dbContext.SaveChanges();
         }
 
-       /* [HttpGet]
-        [Route("getProfessionalAppointment")]
-        public void getProfessionalAppointment(int professionalId)
-        {
-            /*string userIdStringified = _userManager.GetUserId(User);
+        /* [HttpGet]
+         [Route("getProfessionalAppointment")]
+         public void getProfessionalAppointment(int professionalId)
+         {
+             /*string userIdStringified = _userManager.GetUserId(User);
 
-            int userId = int.Parse(userIdStringified);*/
+             int userId = int.Parse(userIdStringified);*/
 
 
-           /* public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
-            {
-                List<ProfessionalAppointment> professionalAppointments = _dbContext.ProfessionalAppointments.Where(
-                    x => x.ProfessionalId == professionalId).ToList();
+        /* public List<AppointmentAddingResponseModel> GetProfessionalAppointments(int professionalId)
+         {
+             List<ProfessionalAppointment> professionalAppointments = _dbContext.ProfessionalAppointments.Where(
+                 x => x.ProfessionalId == professionalId).ToList();
 
-                List<AppointmentAddingResponseModel> responseModels = professionalAppointments
-                    .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.AppointmentDateTime))
-                    .ToList();
+             List<AppointmentAddingResponseModel> responseModels = professionalAppointments
+                 .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.AppointmentDateTime))
+                 .ToList();
 
-                return responseModels;
-            }
-        }*/
+             return responseModels;
+         }
+     }*/
 
         [HttpPost]
         [Route("changeAppointment")]
@@ -269,36 +291,46 @@ namespace Petthy.Controllers.Api
 
         [HttpPost]
         [Route("addMedNote")]
-        public void addMedNote(MedNoteRequest request)
+        public void addMedNote(MedNoteRequestModel request)
         {
-            //string userIdStringified = _userManager.GetUserId(User);
-
-            //int userId = int.Parse(userIdStringified);
-
-        PetMedCardNote medCardNote = new PetMedCardNote
+            if (IsUserAssignedToPet(request.PetId))
             {
-                PetId = request.PetId,
-                Illness = request.Illness,
-                Treatment = request.Treatment,
-                Comment = request.Comment,
-                NoteDate = request.NoteDate
-            };
+                PetMedCardNote medCardNote = new PetMedCardNote
+                {
+                    PetId = request.PetId,
+                    Illness = request.Illness,
+                    Treatment = request.Treatment,
+                    Comment = request.Comment,
+                    NoteDate = request.NoteDate
+                };
 
-            _dbContext.PetMedCardNotes.Add(medCardNote);
-            _dbContext.SaveChanges();
+                _dbContext.PetMedCardNotes.Add(medCardNote);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new ArgumentException("You weren't assigned to this pet to write a med card note for it");
+            }
         }
 
         [HttpGet]
         [Route("getMedNote")]
         public List<MedNoteResponseModel> getPetMedNotes(int petId)
         {
-            List<PetMedCardNote> medNotes = _dbContext.PetMedCardNotes.Where(x => x.PetId == petId).ToList();
+            if (IsUserAssignedToPet(petId))
+            {
+                List<PetMedCardNote> medNotes = _dbContext.PetMedCardNotes.Where(x => x.PetId == petId).ToList();
 
-            List<MedNoteResponseModel> responseModels = medNotes
-                .Select(x => new MedNoteResponseModel(x.PetMedCardNoteId, x.PetId, 
-                x.Illness, x.Treatment, x.Comment, x.NoteDate))
-                .ToList();
-            return responseModels;
+                List<MedNoteResponseModel> responseModels = medNotes
+                    .Select(x => new MedNoteResponseModel(x.PetMedCardNoteId, x.PetId,
+                    x.Illness, x.Treatment, x.Comment, x.NoteDate))
+                    .ToList();
+                return responseModels;
+            }
+            else
+            {
+                throw new ArgumentException("You weren't assigned to this pet to get its med card information");
+            }
         }
 
         [HttpGet]
@@ -328,21 +360,18 @@ namespace Petthy.Controllers.Api
             return responseModels;
         }
 
-        // only for admin
-        [HttpDelete]
-        [Route("DeleteMedNote")]
-        public void DeleteMedNote(int medNoteId)
+        // check whether this user is assigned to chosen pet
+        public bool IsUserAssignedToPet(int petId)
         {
-            PetMedCardNote chosenMedNote = _dbContext.PetMedCardNotes.Find(medNoteId);
-
-            if (chosenMedNote == null)
+            string userIdStringified = _userManager.GetUserId(User);
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
+            List<PetAssignmentResponseModel> petAssignments = GetPetAssignments(petId);
+            if (petAssignments.Find(x => x.ProfessionalId == currentUser.ProfessionalId) != null)
             {
-                throw new ArgumentException("There was an error. Try again");
+                return true;
             }
-
-            _dbContext.PetMedCardNotes.Remove(chosenMedNote);
-            _dbContext.PetMedCardNotes.Update(chosenMedNote);
-            _dbContext.SaveChanges();
+            return false;
         }
     }
 }
+    

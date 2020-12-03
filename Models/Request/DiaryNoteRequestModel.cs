@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Petthy.Models.Request
 {
-    public class MedNoteRequest
+    public class DiaryNoteRequestModel
     {
-        public int PetMedCardNoteId { get; set; }
+        public int PetDiaryNoteId { get; set; }
         public int PetId { get; set; }
-        public string Illness { get; set; }
-        public string Treatment { get; set; }
+        public string LearntCommands { get; set; }
+        public string Advice { get; set; }
         public string Comment { get; set; }
         public DateTime NoteDate { get; set; }
     }

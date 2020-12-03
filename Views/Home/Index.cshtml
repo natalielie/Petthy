@@ -1,8 +1,25 @@
-﻿<!--<div class="text-center">
+﻿@using Microsoft.AspNetCore.Identity;
+<!--<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>-->
 @model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Index";
 }
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        string userIdStringified = UserManager.GetUserId(User);
+
+
+    <partial>Hello, @User.Identity.Name ! Your id is @userIdStringified</partial>
+    }
+    else
+    {
+        <partial>You're not logged in</partial>
+    }
+</ul>
