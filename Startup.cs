@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,11 @@ namespace Petthy
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+
+            services.AddSpaStaticFiles(configuration => {
+                configuration.RootPath = "ClientApp/build";
+            });
+
             /*services.AddIdentity<Professional, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();*/
@@ -101,6 +107,7 @@ namespace Petthy
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSpaStaticFiles();
 
             app.UseRouting();
 
@@ -113,6 +120,14 @@ namespace Petthy
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+            });
+
+            app.UseSpa(spa => {
+                spa.Options.SourcePath = "ClientApp";
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }
