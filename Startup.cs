@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication;
 using Petthy.Data;
 using Petthy.Models;
 using Petthy.Models.Professional;
@@ -38,6 +39,8 @@ namespace Petthy
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
+           // services.AddIdentityServer()
+                    //.AddApiAuthorization<IdentityUser, ApplicationDbContext>();
 
             services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/build";
@@ -83,7 +86,7 @@ namespace Petthy
                 .AddCookie(options =>
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Register");
-                });
+                }).AddIdentityServerJwt();
 
             services.AddMvc();
             services.AddTransient<IEmailSender, EmailSender>();
@@ -112,6 +115,7 @@ namespace Petthy
             app.UseRouting();
 
             app.UseAuthentication();
+            //app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

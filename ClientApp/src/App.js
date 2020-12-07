@@ -6,6 +6,10 @@ import { FetchData } from "./components/FetchData";
 import { Counter } from "./components/Counter";
 import { NotFound } from "./components/NotFound";
 
+import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
+import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
+import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
+
 import "./custom.css";
 
 export default class App extends Component {
@@ -18,7 +22,7 @@ export default class App extends Component {
                     <Route exact path="/" component={Home} />
                     <Route path="/counter" component={Counter} />
                     <Route path="/fetch-data" component={FetchData} />
-                    <Route component={NotFound} />
+                    <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
                 </Switch>
             </Layout>
         );
