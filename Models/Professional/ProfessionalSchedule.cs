@@ -8,7 +8,6 @@ namespace Petthy.Models.Professional
 {
     public class ProfessionalSchedule
     {
-        [Key]
         public int ProfessionalId { get; set; }
         [Key]
         public string Weekday { get; set; }
@@ -16,6 +15,11 @@ namespace Petthy.Models.Professional
         public DateTime DateTimeBegin { get; set; }
         [Key]
         public DateTime DateTimeEnd { get; set; }
+
+        public ProfessionalSchedule()
+        {
+
+        }
 
     }
 }

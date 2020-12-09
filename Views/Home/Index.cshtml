@@ -10,6 +10,13 @@
     ViewData["Title"] = "Index";
 }
 
+<httpProtocol>
+    <customHeaders>
+        <add name="Access-Control-Allow-Origin" value="*" />
+        <add name="Access-Control-Allow-Methods" value="GET, POST, OPTIONS, PUT, DELETE" />
+    </customHeaders>
+</httpProtocol>
+
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {

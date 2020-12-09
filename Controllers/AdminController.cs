@@ -6,12 +6,11 @@ using Petthy.Models.Pet;
 using Petthy.Models.Professional;
 using Petthy.Models.Request;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace Petthy.Controllers
+namespace Petthy.Controllers.Api
 {
+    
     [Route("api/admin")]
     [ApiController]
     public class AdminController : Controller
@@ -35,24 +34,26 @@ namespace Petthy.Controllers
         [Route("ChangeProfessionalAccount")]
         public void ChangeProfessionalAccount(ProfileEditingRequestModel request)
         {
+
             Professional chosenProfessionalAccount = _dbContext.Professionals.Find(request.ProfessionalId);
 
             if (chosenProfessionalAccount == null)
             {
                 throw new ArgumentException("Something went wrong. Try again");
             }
+            Professional chosenUser = new Professional
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Workplace = request.Workplace,
+                ProfessionalRoleId = request.ProfessionalRoleId
+            };
 
-            chosenProfessionalAccount.FirstName = request.FirstName;
-            chosenProfessionalAccount.LastName = request.LastName;
-            //chosenProfessionalAccount.Email = request.Email;
-            chosenProfessionalAccount.PhoneNumber = request.PhoneNumber;
-            //chosenProfessionalAccount.Password = request.Password;
-            chosenProfessionalAccount.Workplace = request.Workplace;
-
-            _dbContext.Professionals.Update(chosenProfessionalAccount);
+            _dbContext.Professionals.Remove(chosenProfessionalAccount);
+            _dbContext.Professionals.Add(chosenUser);
             _dbContext.SaveChanges();
         }
-
 
         [HttpDelete]
         [Route("DeleteProfessionalAccount")]
@@ -72,9 +73,9 @@ namespace Petthy.Controllers
 
         [HttpDelete]
         [Route("DeleteDiaryNote")]
-        public void DeleteDiaryNote(int medNoteId)
+        public void DeleteDiaryNote(int DiaryNoteId)
         {
-            PetDiaryNote chosenDiaryNote = _dbContext.PetDiaryNotes.Find(medNoteId);
+            PetDiaryNote chosenDiaryNote = _dbContext.PetDiaryNotes.Find(DiaryNoteId);
 
             if (chosenDiaryNote == null)
             {
@@ -82,7 +83,6 @@ namespace Petthy.Controllers
             }
 
             _dbContext.PetDiaryNotes.Remove(chosenDiaryNote);
-            _dbContext.PetDiaryNotes.Update(chosenDiaryNote);
             _dbContext.SaveChanges();
         }
 
@@ -97,8 +97,6 @@ namespace Petthy.Controllers
                 throw new ArgumentException("There was an error. Try again");
             }
 
-            _dbContext.PetMedCardNotes.Remove(chosenMedNote);
-            _dbContext.PetMedCardNotes.Update(chosenMedNote);
             _dbContext.SaveChanges();
         }
     }
