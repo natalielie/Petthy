@@ -111,59 +111,6 @@ namespace Petthy
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Register");
                 });
-            /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        // Clock skew compensates for server time drift.
-                        // We recommend 5 minutes or less:
-                        ClockSkew = TimeSpan.FromMinutes(5),
-                        // Specify the key used to sign the token:
-                        IssuerSigningKey = sharedKey,
-                        RequireSignedTokens = true,
-                        // Ensure the token hasn't expired:
-                        RequireExpirationTime = true,
-                        ValidateLifetime = true,
-                        // Ensure the token audience matches our audience value (default true):
-                        ValidateAudience = true,
-                        ValidAudience = "api/doctor",
-                        // Ensure the token was issued by a trusted authorization server (default true):
-                        ValidateIssuer = true,
-                        ValidIssuer = "https://{yourOktaDomain}/oauth2/default"
-                    };
-                    options.Authority = "http://localhost:64615/";
-                    options.Audience = "{yourAudience}";
-                });*/
-            /*services.AddAuthentication(configureOptions =>
-            {
-                configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Register");
-            })
-           .AddJwtBearer(options =>
-           {
-               options.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidateIssuer = true,
-                   ValidateAudience = true,
-                   ValidateLifetime = true,
-                   ValidateIssuerSigningKey = true,
-                   ValidIssuer = Configuration["Jwt:Issuer"],
-                   ValidAudience = Configuration["Jwt:Issuer"],
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-               };
-               options.Events = new JwtBearerEvents
-               {
-                   OnMessageReceived = context =>
-                   {
-                       context.Token = context.Request.Cookies["your-cookie"];
-                       return Task.CompletedTask;
-                   }
-               };
-           });*/
 
             services.AddMvc();
             services.AddTransient<IEmailSender, EmailSender>();
