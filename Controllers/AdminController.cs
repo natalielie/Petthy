@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petthy.Data;
@@ -10,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace Petthy.Controllers.Api
 {
-    
     [Route("api/admin")]
     [ApiController]
     public class AdminController : Controller
@@ -30,6 +30,8 @@ namespace Petthy.Controllers.Api
             return View(await _roleManager.Roles.ToListAsync());
         }
 
+
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [Route("ChangeProfessionalAccount")]
         public void ChangeProfessionalAccount(ProfileEditingRequestModel request)
@@ -55,6 +57,8 @@ namespace Petthy.Controllers.Api
             _dbContext.SaveChanges();
         }
 
+
+        [Authorize(Roles = "Administrator")]
         [HttpDelete]
         [Route("DeleteProfessionalAccount")]
         public void DeleteProfessionalAccount(int ProfessionalId)
@@ -86,6 +90,8 @@ namespace Petthy.Controllers.Api
             _dbContext.SaveChanges();
         }
 
+
+        [Authorize(Roles = "Administrator")]
         [HttpDelete]
         [Route("DeleteMedNote")]
         public void DeleteMedNote(int medNoteId)

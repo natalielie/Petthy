@@ -25,7 +25,9 @@ namespace Petthy.Controllers.Api
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private string id = "de42fbf5-fec2-4ee6-bc2a-1680ec3a94c9";
+        private string id = "427b8c03-d512-4172-82e3-5ffe5f28f834" +
+            "";
+
 
         public VeterinerianController(ApplicationDbContext dbContext,
             UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
@@ -117,8 +119,6 @@ namespace Petthy.Controllers.Api
         // check whether this user is assigned to chosen pet
         public bool IsUserAssignedToPet(int petId)
         {
-            //string userIdStringified = _userManager.GetUserId(User);
-            // Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
             string userIdStringified = id;
             Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
 
@@ -129,6 +129,7 @@ namespace Petthy.Controllers.Api
             }
             return false;
         }
+
 
 
         // Schedule //
