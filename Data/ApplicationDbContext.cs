@@ -64,6 +64,42 @@ namespace Petthy.Data
                     Address = "Riverside st, 33a"
                 }
             );
+
+            modelBuilder.Entity<Pet>().HasData(
+                new Pet
+                {
+                    PetId = 1,
+                    PetName = "Twinkie",
+                    AnimalKind = "Cat",
+                    PetSex = "Female",
+                    PetAge = 1,
+                    ClientId = 1
+                }
+            );
+
+            modelBuilder.Entity<Pet>().HasData(
+                new Pet
+                {
+                    PetId = 2,
+                    PetName = "Jim",
+                    AnimalKind = "Dog",
+                    PetSex = "Male",
+                    PetAge = 3,
+                    ClientId = 2
+                }
+            );
+
+            modelBuilder.Entity<Pet>().HasData(
+                new Pet
+                {
+                    PetId = 3,
+                    PetName = "Cinnabon",
+                    AnimalKind = "Cat",
+                    PetSex = "Male",
+                    PetAge = 1,
+                    ClientId = 2
+                }
+            );
         }
     }
 }

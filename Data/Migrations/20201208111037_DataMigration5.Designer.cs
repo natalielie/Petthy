@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Petthy.Data;
 
 namespace Petthy.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201208111037_DataMigration5")]
+    partial class DataMigration5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,35 +313,6 @@ namespace Petthy.Data.Migrations
                     b.HasKey("PetId");
 
                     b.ToTable("Pets");
-
-                    b.HasData(
-                        new
-                        {
-                            PetId = 1,
-                            AnimalKind = "Cat",
-                            ClientId = 1,
-                            PetAge = 1,
-                            PetName = "Twinkie",
-                            PetSex = "Female"
-                        },
-                        new
-                        {
-                            PetId = 2,
-                            AnimalKind = "Dog",
-                            ClientId = 2,
-                            PetAge = 3,
-                            PetName = "Jim",
-                            PetSex = "Male"
-                        },
-                        new
-                        {
-                            PetId = 3,
-                            AnimalKind = "Cat",
-                            ClientId = 2,
-                            PetAge = 1,
-                            PetName = "Cinnabon",
-                            PetSex = "Male"
-                        });
                 });
 
             modelBuilder.Entity("Petthy.Models.Pet.PetAssignment", b =>
