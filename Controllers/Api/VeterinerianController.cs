@@ -25,8 +25,7 @@ namespace Petthy.Controllers.Api
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private string id = "427b8c03-d512-4172-82e3-5ffe5f28f834" +
-            "";
+        private string id = "427b8c03-d512-4172-82e3-5ffe5f28f834";
 
 
         public VeterinerianController(ApplicationDbContext dbContext,
@@ -41,8 +40,44 @@ namespace Petthy.Controllers.Api
         {
             return Content(User.Identity.Name);
         }
-        
+        // Get doctors
 
+        [HttpGet]
+        [Route("getAllProfessionals")]
+        public List<Professional> getAllProfessionals()
+        {
+            List<Professional> professionals = _dbContext.Professionals.ToList();
+
+            return professionals;
+        }
+
+        [HttpGet]
+        [Route("getSingleProfessional")]
+        public Professional getSingleProfessional(int professionalId)
+        {
+            Professional professional = _dbContext.Professionals.SingleOrDefault(x => x.ProfessionalId == professionalId);
+
+            return professional;
+        }
+
+
+        [HttpGet]
+        [Route("getAllProfessionalRoles")]
+        public List<ProfessionalRole> getAllProfessionalRoles()
+        {
+            List<ProfessionalRole> professionalRoles = _dbContext.ProfessionalRoles.ToList();
+
+            return professionalRoles;
+        }
+
+        [HttpGet]
+        [Route("getSingleProfessionalRole")]
+        public ProfessionalRole getSingleProfessionalRole(int professionalRoleId)
+        {
+            ProfessionalRole professionalRole = _dbContext.ProfessionalRoles.SingleOrDefault(x => x.ProfessionalRoleId == professionalRoleId);
+
+            return professionalRole;
+        }
         // MedNotes //
 
         [HttpPost]
