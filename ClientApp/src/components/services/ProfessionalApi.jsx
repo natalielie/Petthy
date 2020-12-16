@@ -24,18 +24,18 @@ class ProfessionalApi {
     }
 
 
-    static editProfessional = (doctor, callback) => {
-        let id = doctor.id;
-        delete doctor.id;
-        Axios.put('api/doctors/' + id, doctor)
-            .then(() => ProfessionalApi.getDoctors(callback))
+    static editProfessional = (professional, callback) => {
+        let id = professional.id;
+        delete professional.id;
+        Axios.put('api/doctors/' + id, professional)
+            .then(() => ProfessionalApi.getProfessionals(callback))
             .catch(ProfessionalApi.errorHandler);
     }
 
 
     static deleteProfessional = (id, callback) => {
         Axios.delete('api/doctors/' + id)
-            .then(() => ProfessionalApi.getDoctors(callback))
+            .then(() => ProfessionalApi.getProfessionals(callback))
             .catch(ProfessionalApi.errorHandler);
     }
 

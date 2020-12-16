@@ -3,10 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Petthy.Data;
+using Petthy.Models;
 using Petthy.Models.Pet;
 using Petthy.Models.Professional;
 using Petthy.Models.Request;
+using Petthy.Models.Response;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Petthy.Controllers.Api
@@ -105,5 +109,69 @@ namespace Petthy.Controllers.Api
 
             _dbContext.SaveChanges();
         }
+
+
+        [HttpGet]
+        [Route("getAllAssignments")]
+        public List<PetAndProfessional> getAllAssignments()
+        {
+            List<PetAssignment> petAssignments = _dbContext.PetAssignments.ToList();
+
+
+            List<Pet> pets = _dbContext.Pets.ToList();
+            List<Professional> professionals = _dbContext.Professionals.ToList();
+
+            List<PetAndProfessional> petsAndProfessionals = new List<PetAndProfessional>();
+            foreach(var assignment in petAssignments)
+            {
+                Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == assignment.PetId);
+                Professional professional = _dbContext.Professionals.SingleOrDefault(
+                    x => x.ProfessionalId == assignment.ProfessionalId);
+                petsAndProfessionals.Add(new PetAndProfessional
+                {
+                    Pet = pet,
+                    Professional = professional
+                });
+
+            }
+           
+            return petsAndProfessionals;
+        }
+
+        [HttpGet]
+        [Route("getAllAppointments")]
+        public List<PetAndProfessional> getAllAppointments()
+        {
+            List<Appointment> professionalAppointments = _dbContext.Appointments.ToList();
+
+            List<AppointmentAddingResponseModel> responseModels = professionalAppointments
+                .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.Date))
+                .ToList();
+
+            List<Pet> pets = _dbContext.Pets.ToList();
+            List<Professional> professionals = _dbContext.Professionals.ToList();
+
+            List<PetAndProfessional> petsAndProfessionals = new List<PetAndProfessional>();
+            foreach (var appointment in professionalAppointments)
+            {
+                DateTime currentTime = DateTime.Now;
+                if (appointment.Date >= currentTime)
+                {
+                    Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == appointment.PetId);
+                    Professional professional = _dbContext.Professionals.SingleOrDefault(
+                        x => x.ProfessionalId == appointment.ProfessionalId);
+                    petsAndProfessionals.Add(new PetAndProfessional
+                    {
+                        AppointmentId = appointment.AppointmentId,
+                        Pet = pet,
+                        Professional = professional,
+                        DateTimeBegin = appointment.Date
+                    });
+                }
+            }
+
+            return petsAndProfessionals;
+        }
+
     }
 }

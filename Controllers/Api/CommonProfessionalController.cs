@@ -126,6 +126,39 @@ namespace Petthy.Controllers.Api
             return responseModels;
         }
 
+        [HttpGet]
+        [Route("getSpecificAssignment")]
+        public List<PetAssignmentResponseModel> getSpecificAssignment(int petId)
+        {
+            string userIdStringified = _userManager.GetUserId(User);
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
+
+            List<PetAssignment> petAssignments = _dbContext.PetAssignments.Where(
+                x => x.PetId == petId && x.ProfessionalId == currentUser.ProfessionalId).ToList();
+
+            List<PetAssignmentResponseModel> responseModels = petAssignments
+                .Select(x => new PetAssignmentResponseModel(x.PetId, x.ProfessionalId))
+                .ToList();
+
+            return responseModels;
+        }
+
+        [HttpGet]
+        [Route("getMyAssignments")]
+        public List<PetAssignmentResponseModel> getMyAssignments()
+        {
+            string userIdStringified = _userManager.GetUserId(User);
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
+
+            List<PetAssignment> petAssignments = _dbContext.PetAssignments.Where(
+                x => x.ProfessionalId == currentUser.ProfessionalId).ToList();
+
+            List<PetAssignmentResponseModel> responseModels = petAssignments
+                .Select(x => new PetAssignmentResponseModel(x.PetId, x.ProfessionalId))
+                .ToList();
+
+            return responseModels;
+        }
 
         [HttpDelete]
         [Route("DeletePetAssignment")]
@@ -279,6 +312,7 @@ namespace Petthy.Controllers.Api
             _dbContext.SaveChanges();
         }
 
+        
         // Profile editing //
 
         [HttpPost]

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { UseState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap';
+import Axios from 'axios';
 
 import petsTemplate from './PetsTemplate';
 import PetApi from '../../services/PetApi';
@@ -9,10 +11,10 @@ import utils from '../../utils';
 import DeleteModal from './DeleteModal';
 
 function PetRow(props) {
-    const pet = props.pet
+    const pet = props.pet.pet
     const petLink = `/pets/${pet.petId}`
-    const petOwner = props.client
-    const petOwnerLink = `/clients/${pet.clientId}`
+    //const petOwner = props.client
+    //const petOwnerLink = `/clients/${pet.clientId}`
 
     const getBadge = (status) => {
         return status === 'Active' ? 'success' :
@@ -28,8 +30,8 @@ function PetRow(props) {
             <td><Link to={petLink}>{pet.petName}</Link></td>
             <td>{pet.animalKind}</td>
             <td>{pet.petSex}</td>
-            <td><Link to={petOwnerLink}>{petOwner.firstName}</Link></td>
-            <td><Link to={petOwnerLink}>{petOwner.lastName}</Link></td>
+            <td>{props.pet.owner.firstName}</td>
+            <td>{props.pet.owner.lastName}</td>
 
             <td>
                 <Link to={"/pets/edit/" + pet.petId} params={{ pet: pet }}>
@@ -48,7 +50,7 @@ class Pets extends Component {
     constructor() {
         super();
 
-        this.state = { pets: [], clients: [] };
+        this.state = { pets: [] };
 
         this.petsTemplate = utils.selectTemplateObjectsWithNames(
             petsTemplate, ['petId', 'petName', 'animalKind', 'petSex',
@@ -62,12 +64,12 @@ class Pets extends Component {
 
         document.title = "Pets";
         this.updatePetsHandler();
-        this.updateClientsHandler();
     }
 
-    updatePetsHandler = () => PetApi.getPets(pets => this.setState({ pets: pets }));
 
-    updateClientsHandler = () => ClientApi.getClients(clients => this.setState({ clients: clients }));
+    updatePetsHandler = () => PetApi.getPetsAndOwners(pets => this.setState({ pets: pets}));
+
+   // updateClientsHandler = () => ClientApi.getClients(clients => this.setState({ clients: clients }));
 
     addPetHandler = (pet) => PetApi.addPet(pet, this.updatePetsHandler);
 
@@ -100,8 +102,8 @@ class Pets extends Component {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.state.pets.map((pet, client, index) =>
-                                            <PetRow key={index} pet={pet} client={client} template={this.petsTemplate} deletePetHandler={this.deletePetHandler} />
+                                        {this.state.pets.map((pet, index) =>
+                                            <PetRow key={index} pet={pet} template={this.petsTemplate} deletePetHandler={this.deletePetHandler} />
                                         )}
                                     </tbody>
                                 </Table>

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Petthy.Data;
+using Petthy.Models;
 using Petthy.Models.Pet;
 using Petthy.Models.Professional;
 using Petthy.Models.Response;
@@ -33,35 +34,55 @@ namespace Petthy.Controllers.Api
                 return pets;
             }
 
-          /*  [HttpGet]
-            [Route("getMyPets")]
-            public List<ClientResponseModel> getMyPets()
+        [HttpGet]
+        [Route("getAllPetsAndOwners")]
+        public List<PetAndOwner> getAllPetsAndOwners()
+        {
+            List<Pet> pets = _dbContext.Pets.ToList();
+            List<Client> clients = _dbContext.Clients.ToList();
+            List<PetAndOwner> petsAndOwners = new List<PetAndOwner>();
+
+            foreach (var pet in pets)
             {
-                string userIdStringified = _userManager.GetUserId(User);
-                Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
-
-                List<PetAssignmentResponseModel> myPetAssignments = getVeterineriansAssignments(currentUser.ProfessionalId).ToList();
-
-                List<Client> clients = new List<Client>().ToList();
-
-                for (int i = 0; i < myPetAssignments.Count; i++)
+                foreach (var client in clients)
                 {
-                    Pet newPet = _dbContext.Pets.
-                        SingleOrDefault(x => x.PetId == myPetAssignments[i].PetId);
-                    Client newClient = _dbContext.Clients.SingleOrDefault(x => x.ClientId == newPet.ClientId);
-                    if (clients.Where(x => x.ClientId == newClient.ClientId) == null)
+                    if(pet.ClientId == client.ClientId)
                     {
-                        clients.Add(newClient);
+                        petsAndOwners.Add(new PetAndOwner { Pet = pet, Owner = client});
                     }
-
                 }
-                List<ClientResponseModel> responseModels = clients
-                    .Select(x => new ClientResponseModel(
-                        x.ClientId, x.FirstName, x.LastName, x.PhoneNumber, x.DateOfBirth, x.Address))
-                    .ToList();
+            }
+            return petsAndOwners;
+        }
+        /*  [HttpGet]
+          [Route("getMyPets")]
+          public List<ClientResponseModel> getMyPets()
+          {
+              string userIdStringified = _userManager.GetUserId(User);
+              Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
 
-                return responseModels;
-            }*/
+              List<PetAssignmentResponseModel> myPetAssignments = getVeterineriansAssignments(currentUser.ProfessionalId).ToList();
+
+              List<Client> clients = new List<Client>().ToList();
+
+              for (int i = 0; i < myPetAssignments.Count; i++)
+              {
+                  Pet newPet = _dbContext.Pets.
+                      SingleOrDefault(x => x.PetId == myPetAssignments[i].PetId);
+                  Client newClient = _dbContext.Clients.SingleOrDefault(x => x.ClientId == newPet.ClientId);
+                  if (clients.Where(x => x.ClientId == newClient.ClientId) == null)
+                  {
+                      clients.Add(newClient);
+                  }
+
+              }
+              List<ClientResponseModel> responseModels = clients
+                  .Select(x => new ClientResponseModel(
+                      x.ClientId, x.FirstName, x.LastName, x.PhoneNumber, x.DateOfBirth, x.Address))
+                  .ToList();
+
+              return responseModels;
+          }*/
 
         [HttpGet]
         [Route("getSinglePetByClient")]

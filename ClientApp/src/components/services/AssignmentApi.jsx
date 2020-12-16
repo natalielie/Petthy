@@ -1,48 +1,56 @@
 ﻿import Axios from 'axios';
 
-class RoomsApi {
+class AssignmentApi {
 
 
-    static getRooms = (callback) => {
-        Axios.get('api/rooms')
+    static getMyAssignments = (callback) => {
+        Axios.get('api/commonProfessional/getMyAssignments')
             .then(res => callback(res.data))
-            .catch(RoomsApi.errorHandler);
+            .catch(AssignmentApi.errorHandler);
     }
 
-
-    static getRoom = (id, callback) => {
-        Axios.get('api/rooms/' + id)
+    static getAllAssignments = (callback) => {
+        Axios.get('api/admin/getAllAssignments')
             .then(res => callback(res.data))
-            .catch(RoomsApi.errorHandler);
+            .catch(AssignmentApi.errorHandler);
+    }
+
+    static getSpecificAssignment = (petId, callback) => {
+        Axios.get('api/commonProfessional/getSpecificAssignment/' + petId)
+            .then(res => callback(res.data))
+            .catch(AssignmentApi.errorHandler);
     }
 
 
-    static addRoom = (room, callback) => {
-        Axios.post('api/rooms', room)
-            .then(() => RoomsApi.getRooms(callback))
-            .catch(RoomsApi.errorHandler);
+    /*static addAssignment = (petId, callback) => {
+        Axios.post('api/commonProfessional/assignPetToDoctor', petId)
+            .then(() => AssignmentApi.getAllAssignments(callback))
+            .catch(AssignmentApi.errorHandler);
+    }*/
+
+
+    /*static deleteAssignment = (petId, callback) => {
+        Axios.delete('api/commonProfessional/DeletePetAssignment/' + petId)
+            .then(() => AssignmentApi.getAllAssignments(callback))
+            .catch(AssignmentApi.errorHandler);
+    }*/
+
+    static addAssignment = (petId, professionalId, callback) => {
+        Axios.post('api/commonProfessional/assignPetToDoctor', petId, professionalId)
+            .then(() => AssignmentApi.getAllAssignments(callback))
+            .catch(AssignmentApi.errorHandler);
     }
 
 
-    static editRoom = (room, callback) => {
-        let id = room.id;
-        delete room.id;
-        Axios.put('api/rooms/' + id, room)
-            .then(() => RoomsApi.getRooms(callback))
-            .catch(RoomsApi.errorHandler);
+    static deleteAssignment = (petId, professionalId, callback) => {
+        Axios.delete('api/commonProfessional/DeletePetAssignment/', petId, professionalId)
+            .then(() => AssignmentApi.getAllAssignments(callback))
+            .catch(AssignmentApi.errorHandler);
     }
-
-
-    static deleteRoom = (id, callback) => {
-        Axios.delete('api/rooms/' + id)
-            .then(() => RoomsApi.getRooms(callback))
-            .catch(RoomsApi.errorHandler);
-    }
-
 
     errorHandler = error => console.log(error);
 
 }
 
 
-export default RoomsApi;
+export default AssignmentApi;

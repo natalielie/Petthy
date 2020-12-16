@@ -11,6 +11,8 @@ import { ApplicationPaths } from './components/api-authorization/ApiAuthorizatio
 import "./custom.css";
 import Professionals from "./components/views/Professionals/Professionals";
 import Pets from "./components/views/Clients/Pets";
+import Assignments from "./components/views/Assignments/Assignments";
+import Appointments from "./components/views/Appointments/Appointments";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -22,6 +24,8 @@ export default class App extends Component {
                     <Route exact path="/" component={Home} />
                     <Route path="/professionals" component={Professionals} />
                     <Route path="/pets" component={Pets} />
+                    <Route path="/assignments" component={Assignments} />
+                    <Route path="/appointments" component={Appointments} />
                     <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
                 </Switch>
             </Layout>

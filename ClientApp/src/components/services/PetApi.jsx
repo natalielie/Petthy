@@ -9,13 +9,27 @@ class PetApi {
             .catch(PetApi.errorHandler);
     }
 
-
+  
     static getPet = (id, callback) => {
         Axios.get('api/pet/getSinglePet' + id)
             .then(res => callback(res.data))
             .catch(PetApi.errorHandler);
     }
 
+
+    static getPetsAndOwners = (callback) => {
+        Axios.get('api/pet/getAllPetsAndOwners')
+            .then(res => callback(res.data))
+            .catch(PetApi.errorHandler);
+    }
+
+   /* static getPetAndOwner = (callback) => {
+        Axios.all([Axios.get(`api/pet/getAllPets`),
+        Axios.get(`api/client/getAllClients`)])
+            .then(Axios.spread((firstResponse, secondResponse) =>
+                callback(firstResponse.data, secondResponse.data)))
+            .catch(PetApi.errorHandler);
+    }*/
 
     /*static admitPatient = (id, callback) => {
         Axios.get('api/patients/' + id + '/admit')
