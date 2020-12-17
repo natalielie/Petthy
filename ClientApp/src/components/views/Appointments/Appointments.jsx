@@ -46,6 +46,7 @@ class Appointments extends Component {
         this.updateAppointmentsHandler();
     }
 
+
     updateAppointmentsHandler = () => AppointmentApi.getAllAppointments(
         appointments => this.setState({ appointments: appointments }));
 

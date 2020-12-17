@@ -21,8 +21,7 @@ function ProfessionalRow(props) {
         return (
         <tr key={professional.professionalId.toString()}>
             <th scope="row"><Link to={professionalLink}>{professional.professionalId}</Link></th>
-                <td><Link to={professionalLink}>{professional.firstName}</Link>
-                    <Link to={professionalLink}>{professional.lastName}</Link></td>
+                <td><Link to={professionalLink}>{professional.firstName}</Link> <Link to={professionalLink}>{professional.lastName}</Link></td>
             <td>Veterinerian</td>
             <td>
                 <Link to={"/professionals/edit/" + professional.professionalId} params={{ professional: professional }}>
@@ -38,8 +37,7 @@ function ProfessionalRow(props) {
         return (
              <tr key={professional.professionalId.toString()}>
              <th scope="row"><Link to={professionalLink}>{professional.professionalId}</Link></th>
-            <td><Link to={professionalLink}>{professional.firstName}</Link></td>
-            <td><Link to={professionalLink}>{professional.lastName}</Link></td>
+                <td><Link to={professionalLink}>{professional.firstName}</Link> <Link to={professionalLink}>{professional.lastName}</Link></td>
             <td>Specialist</td>
             <td>
                 <Link to={"/professionals/edit/" + professional.professionalId} params={{ professional: professional }}>

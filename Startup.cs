@@ -11,6 +11,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using Petthy.Data;
 using System;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 
 namespace Petthy
 {
@@ -29,10 +32,28 @@ namespace Petthy
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            /*services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<ApplicationDbContext>()
-        .AddDefaultTokenProviders();
+        .AddDefaultTokenProviders();*/
 
+            services.AddDefaultIdentity<IdentityUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddIdentityServer().AddApiAuthorization<IdentityUser, ApplicationDbContext>();
+
+            services.AddAuthentication().AddIdentityServerJwt();
+
+            services.Configure<JwtBearerOptions>(
+        IdentityServerJwtConstants.IdentityServerJwtBearerScheme,
+        options =>
+        {
+        var onTokenValidated = options.Events.OnTokenValidated;
+
+        options.Events.OnTokenValidated = async context =>
+        {
+            await onTokenValidated(context);
+        };
+        });
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
@@ -44,6 +65,16 @@ namespace Petthy
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin",
+                    policy =>
+                    {
+                        // Even though we are using JwtClaimTypes in the ProfileService of the IdentityServer
+                        // the actual user claims are converted to those in ClaimTypes so check for them here
+                        policy.RequireClaim(ClaimTypes.Role, "administrator");
+                    });
+            });
             /*services.AddIdentity<Professional, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();*/
@@ -70,7 +101,7 @@ namespace Petthy
                 options.User.RequireUniqueEmail = false;
             });
 
-            services.ConfigureApplicationCookie(options =>
+           /* services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
@@ -86,7 +117,7 @@ namespace Petthy
                 .AddCookie(options =>
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Register");
-                }).AddIdentityServerJwt();
+                }).AddIdentityServerJwt();*/
 
             services.AddMvc();
             services.AddTransient<IEmailSender, EmailSender>();
@@ -116,12 +147,11 @@ namespace Petthy
             app.UseRouting();
 
             app.UseAuthentication();
-            //app.UseIdentityServer();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseCors(options => options.AllowAnyOrigin());
 
-            // app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
 
             app.UseEndpoints(endpoints =>
             {

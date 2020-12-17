@@ -13,6 +13,7 @@ import Professionals from "./components/views/Professionals/Professionals";
 import Pets from "./components/views/Clients/Pets";
 import Assignments from "./components/views/Assignments/Assignments";
 import Appointments from "./components/views/Appointments/Appointments";
+import Schedule from "./components/views/Schedule/Schedules";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -26,6 +27,7 @@ export default class App extends Component {
                     <Route path="/pets" component={Pets} />
                     <Route path="/assignments" component={Assignments} />
                     <Route path="/appointments" component={Appointments} />
+                    <Route path="/schedule" component={Schedule} />
                     <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
                 </Switch>
             </Layout>

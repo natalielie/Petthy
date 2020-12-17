@@ -55,6 +55,11 @@
       </ResolvedFileToPublish>
     </ItemGroup>
 	</Target>
+
+  <ItemGroup>
+    <None Include="Areas\Identity\Pages\Account\Logout.cshtml" />
+    <None Include="Areas\Identity\Pages\Account\Logout.cshtml.cs" />
+  </ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="Ionic.Zip-1.9.1.8" Version="1.9.1.8" />

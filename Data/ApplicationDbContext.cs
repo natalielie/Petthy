@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using IdentityServer4.EntityFramework.Extensions;
+using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Petthy.Models;
 using Petthy.Models.Pet;
 using Petthy.Models.Professional;
@@ -10,7 +15,7 @@ using System.Text;
 
 namespace Petthy.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : ApiAuthorizationDbContext<IdentityUser>
     {
         public DbSet<Client> Clients { get; set; }
         public DbSet<Professional> Professionals { get; set; }
@@ -25,13 +30,22 @@ namespace Petthy.Data
         public DbSet<PetAssignment> PetAssignments { get; set; }
         public DbSet<ProfessionalAppointment> ProfessionalAppointments { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        IOptions<OperationalStoreOptions> operationalStoreOptions;
+
+        public ApplicationDbContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> _operationalStoreOptions) : base(options, _operationalStoreOptions)
         {
+            this.operationalStoreOptions = _operationalStoreOptions;
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ConfigurePersistedGrantContext(operationalStoreOptions.Value);
+
             modelBuilder.Entity<PetAssignment>()
                .HasKey(c => new { c.PetId, c.ProfessionalId });
 
