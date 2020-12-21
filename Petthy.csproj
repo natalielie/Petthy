@@ -57,6 +57,10 @@
 	</Target>
 
   <ItemGroup>
+    <Content Include="ClientApp\src\locate\jp\translate.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Areas\Identity\Pages\Account\Logout.cshtml" />
     <None Include="Areas\Identity\Pages\Account\Logout.cshtml.cs" />
   </ItemGroup>
@@ -75,6 +79,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Owin.Cors" Version="4.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

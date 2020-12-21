@@ -202,7 +202,7 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getSchedule")]
-        public List<ProfessionalScheduleResponseModel> getVacantDatesOfSchedule()
+        public List<Schedule> getVacantDatesOfSchedule()
         {
             //string userIdStringified = _userManager.GetUserId(User);
             string userIdStringified = id;
@@ -211,11 +211,20 @@ namespace Petthy.Controllers.Api
             List<ProfessionalSchedule> schedules = _dbContext.ProfessionalSchedules.Where(
                 x => x.ProfessionalId == currentUser.ProfessionalId).ToList();
 
-            List<ProfessionalScheduleResponseModel> responseModels = schedules
-                .Select(x => new ProfessionalScheduleResponseModel(
-                    x.ProfessionalId, x.Weekday, x.DateTimeBegin, x.DateTimeEnd))
-                .ToList();
-
+            List<Schedule> responseModels = new List<Schedule>();
+            foreach (var schedule in schedules)
+            {
+                DateTime currentTime = DateTime.Now;
+                if (schedule.DateTimeBegin >= currentTime)
+                {
+                    responseModels.Add(new Schedule
+                    {
+                        Professional = currentUser,
+                        DateTimeBegin = schedule.DateTimeBegin,
+                        DateTimeEnd = schedule.DateTimeEnd
+                    });
+                }
+            }
             return responseModels;
         }
 
@@ -259,6 +268,35 @@ namespace Petthy.Controllers.Api
             return responseModels;
         }
 
+        [HttpGet]
+        [Route("getMyAssignments")]
+        public List<PetAndProfessional> getMyAssignments()
+        {
+            string userIdStringified = id;
+            Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
+
+            List<PetAssignment> petAssignments = _dbContext.PetAssignments.Where(
+                x => x.ProfessionalId == currentUser.ProfessionalId).ToList();
+
+            List<Pet> pets = _dbContext.Pets.ToList();
+            List<Professional> professionals = _dbContext.Professionals.ToList();
+
+            List<PetAndProfessional> petsAndProfessionals = new List<PetAndProfessional>();
+            foreach (var assignment in petAssignments)
+            {
+                Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == assignment.PetId);
+                Professional professional = _dbContext.Professionals.SingleOrDefault(
+                    x => x.ProfessionalId == assignment.ProfessionalId);
+                petsAndProfessionals.Add(new PetAndProfessional
+                {
+                    Pet = pet,
+                    Professional = professional
+                });
+
+            }
+
+            return petsAndProfessionals;
+        }
 
         [HttpDelete]
         [Route("DeletePetAssignment")]
@@ -284,7 +322,7 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getProfessionalSchedule")]
-        public List<AppointmentAddingResponseModel> GetProfessionalAppointments()
+        public List<Schedule> GetProfessionalAppointments()
         {
             string userIdStringified = id;
             Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
@@ -292,12 +330,28 @@ namespace Petthy.Controllers.Api
             List<Appointment> professionalAppointments = _dbContext.Appointments.Where(
                 x => x.ProfessionalId == currentUser.ProfessionalId).ToList();
 
-            List<AppointmentAddingResponseModel> responseModels = professionalAppointments
-                .Select(x => new AppointmentAddingResponseModel(x.PetId, x.ProfessionalId, x.Date))
-                .ToList();
+            List<Pet> pets = _dbContext.Pets.ToList();
 
-            return responseModels;
+            List<Schedule> petsAndProfessionals = new List<Schedule>();
+            foreach (var appointment in professionalAppointments)
+            {
+                DateTime currentTime = DateTime.Now;
+                if (appointment.Date >= currentTime)
+                {
+                    Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == appointment.PetId);
+                    petsAndProfessionals.Add(new Schedule
+                    {
+                        //AppointmentId = appointment.AppointmentId,
+                        //Pet = pet,
+                        Professional = currentUser,
+                        DateTimeBegin = appointment.Date
+                    });
+                }
+            }
+
+            return petsAndProfessionals;
         }
+
 
         [HttpPost]
         [Route("addAppointment")]
@@ -306,7 +360,7 @@ namespace Petthy.Controllers.Api
             string userIdStringified = id;
             Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
 
-            List<ProfessionalScheduleResponseModel> vacantSchedule = getVacantDatesOfSchedule();
+            List<Schedule> vacantSchedule = getVacantDatesOfSchedule();
 
 
             if (vacantSchedule.Any(x => x.DateTimeBegin == request.AppointmentDateTime))
@@ -348,7 +402,7 @@ namespace Petthy.Controllers.Api
                             && x.PetId == request.PetId
                             && x.Date == request.AppointmentDateTime);
 
-            List<ProfessionalScheduleResponseModel> vacantSchedule = getVacantDatesOfSchedule();
+            List<Schedule> vacantSchedule = getVacantDatesOfSchedule();
 
 
             if (vacantSchedule.Any(x => x.DateTimeBegin == request.NewAppointmentDateTime))
@@ -385,7 +439,7 @@ namespace Petthy.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("DeleteAppointment")]
+        [Route("deleteAppointment")]
         public void DeleteAppointment(AppointmentAddingRequestModel request)
         {
             string userIdStringified = id;

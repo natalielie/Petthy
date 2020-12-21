@@ -21,7 +21,7 @@ class AddVacantDates extends Component {
         event.preventDefault();
 
         var data = {
-            begin: event.target.elements['begin'].value
+            begin: event.target.elements['begin'].value,
             end: event.target.elements['end'].value
         };
         
@@ -66,5 +66,7 @@ class AddVacantDates extends Component {
         )
     }
 }
+
+
 
 export default AddDoctor;

@@ -4,13 +4,20 @@ import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
 
-export class NavMenu extends Component {
+import App from "../App";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { withTranslation } from "react-i18next";
+
+//const ProfileComponent = withTranslation()(Profile)
+
+class NavMenu extends Component {
     static displayName = NavMenu.name;
 
     constructor(props) {
         super(props);
 
         this.toggleNavbar = this.toggleNavbar.bind(this);
+
         this.state = {
             collapsed: true
         };
@@ -22,40 +29,31 @@ export class NavMenu extends Component {
         });
     }
 
-  render () {
-    return (
-      <header>
-        <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
-          <Container>
-            <NavbarBrand tag={Link} to="/">Petthy Health System</NavbarBrand>
-            <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-            <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
-                </NavItem>
-                <NavItem>
-                 <NavLink tag={Link} className="text-dark" to="/professionals">Professionals</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/pets">Pets</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/assignments">Assignments</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/appointments">Appointments</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/schedule">Schedule</NavLink>
-                </NavItem>
-                <LoginMenu>
-                </LoginMenu>
-              </ul>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </header>
-    );
-  }
+    render() {
+        // var home = language["locale"] === "eng" ? language["home_eng"] : language["home_uk"]
+        const { t } = this.props;
+        return (
+            <header>
+                <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3">
+                <Container>
+                <NavbarBrand tag={Link} to="/">Petthy Health System</NavbarBrand>
+                <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+                <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+                    <ul className="navbar-nav flex-grow">
+                     <NavItem>
+                        <NavLink tag={Link} className="text-dark" to="/">{t("Home")}</NavLink>
+                                    
+                    </NavItem>
+                    <LoginMenu>
+                                </LoginMenu>
+                    </ul>
+                </Collapse>
+                </Container>
+            </Navbar>
+            </header>
+        );
+    }
 }
+
+export default withTranslation()(NavMenu);
+

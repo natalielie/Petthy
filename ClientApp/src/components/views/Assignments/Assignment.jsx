@@ -17,7 +17,8 @@ class Assignment extends Component {
         this.getAssignmentHandler(this.props.match.params.professionalId);
     }
 
-    getAssignmentHandler = (professionalId) => AssignmentlApi.getMyAssignment(professionalId, assignment => this.setState({ assignment: assignment }));
+    getAssignmentHandler = (professionalId) => AssignmentlApi.getMyAssignment(
+        professionalId, assignment => this.setState({ assignment: assignment }));
 
 
     render() {

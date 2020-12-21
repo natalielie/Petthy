@@ -1,0 +1,16 @@
+﻿{
+  "translations": {
+    "paragraph": "Introduction",
+    "author": {
+      "title": "Author Name",
+      "value": "Tariqul"
+    },
+    "home": "Home",
+    "name": "Name",
+    "professionalRole": "Professional Role",
+    "edit": "Edit",
+    "delete": "Delete",
+
+    "veterinerian": "Veterinerian"
+  }
+}

@@ -45,14 +45,50 @@ export class LoginMenu extends Component {
     }
 
     authenticatedView(userName, profilePath, logoutPath) {
-        return (<Fragment>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
-            </NavItem>
-            <NavItem>
-                <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
-            </NavItem>
-        </Fragment>);
+        if (userName != "admin@gmail.com") {
+            return (<Fragment>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/pets">Pets</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/assignments">My Assignments</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/appointments">My Appointments</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/schedule">My Schedule</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
+                </NavItem>
+            </Fragment>);
+        }
+        else {
+            return (<Fragment>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/professionals">Professionals</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/pets">Pets</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/assignments">Assignments</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to="/appointments">Appointments</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
+                </NavItem>
+            </Fragment>);
+        }
 
     }
 

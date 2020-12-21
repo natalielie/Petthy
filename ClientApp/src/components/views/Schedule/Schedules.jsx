@@ -18,7 +18,7 @@ function ScheduleRow(props) {
     }
 
     return (
-        <tr key={schedule.schedule.professionalId.toString()}>
+        <tr key={schedule.professional.professionalId.toString()}>
             <th scope="row">{schedule.professional.professionalId}</th>
             <td>{schedule.professional.firstName} {schedule.professional.lastName}</td>
             <td>{new Date(schedule.schedule.dateTimeBegin).toLocaleDateString()} {new Date(schedule.schedule.dateTimeBegin).toLocaleTimeString()}</td>
@@ -48,7 +48,7 @@ class Schedules extends Component {
     }
 
 
-    updateSchedulesHandler = () => ScheduleApi.getTakenSchedule(
+    updateSchedulesHandler = () => ScheduleApi.getFreeSchedule(
         schedules => this.setState({ schedules: schedules }));
 
     addSchedulesHandler = (schedule) => ScheduleApi.addSchedule(schedule, this.updateSchedulesHandler);

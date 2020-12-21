@@ -1,30 +1,74 @@
-import React, { Component } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, FormGroup, Label, Input, Row } from 'reactstrap';
-import DoctorsApi from '../../services/DoctorsApi';
+import React, { Component, useState } from 'react';
+import { Button, Card, CardBody, CardHeader, Col, FormGroup, Label, Input, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import AppointmentApi from '../../services/AppointmentApi';
+import Datetime from 'react-datetime';
 
-class AddDoctor extends Component {
+
+
+const ComboboxProfessional = (props) => {
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggle = () => setDropdownOpen(prevState => !prevState);
+    return (
+        <Dropdown>
+            <DropdownToggle caret>
+        </DropdownToggle>
+            <DropdownMenu>
+                <DropdownItem>John Smith</DropdownItem>
+                <DropdownItem>Kate Wolson</DropdownItem>
+                <DropdownItem>Anatolii Kompotov</DropdownItem>
+                <DropdownItem>Ahmad Ahmed</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    );
+}
+
+const ComboboxPet = (props) => {
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggle = () => setDropdownOpen(prevState => !prevState);
+    return (
+        <Dropdown >
+            <DropdownToggle caret>
+            </DropdownToggle>
+            <DropdownMenu>
+                <DropdownItem>John Smith</DropdownItem>
+                <DropdownItem>Kate Wolson</DropdownItem>
+                <DropdownItem>Anatolii Kompotov</DropdownItem>
+                <DropdownItem>Ahmad Ahmed</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+    );
+}
+
+
+class AddAppointment extends Component {
 
     constructor() {
         super();
 
-        this.addDoctorHandler = this.addDoctorHandler.bind(this);
+        this.addAppointmentHandler = this.addAppointmentHandler.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
-        document.title = "Add Doctor";
+        document.title = "Add Appointment";
     }
 
-    addDoctorHandler = (doctor, callback) => DoctorsApi.addDoctor(doctor, callback);
+    addAppointmentHandler = (appointment, callback) => AppointmentApi.addAppointment(appointment, callback);
 
     handleSubmit = (event) => {
         event.preventDefault();
 
         var data = {
-            name: event.target.elements['name'].value
+            name: event.target.elements['professional'].value,
+            pet: event.target.elements['pet'].value,
+            date: event.target.elements['date'].value
         };
         
-        this.addDoctorHandler(data, () => this.props.history.push('/doctors'));
+        this.addAppointmentHandler(data, () => this.props.history.push('/appointments'));
     }
 
     render() {
@@ -34,19 +78,36 @@ class AddDoctor extends Component {
                     <Col xs="12" md="7">
                         <Card>
                             <CardHeader>
-                                <strong>Add Patient</strong>
+                                <strong>Add Appointment</strong>
                             </CardHeader>
                             <CardBody>
                                 <form onSubmit={this.handleSubmit} className="form-horizontal">
                                     <FormGroup row>
                                         <Col md="3">
-                                            <Label htmlFor="name">Name</Label>
+                                            <Label htmlFor="professional">Professional Name</Label>
                                         </Col>
                                         <Col xs="12" md="9">
-                                            <Input type="text" id="name"  name="name" required placeholder="Name" />
+                                            {ComboboxProfessional}
                                         </Col>
                                     </FormGroup>
-                                    
+
+                                    <FormGroup row>
+                                        <Col md="3">
+                                            <Label htmlFor="pet">Pet Name</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            {ComboboxPet}
+                                        </Col>
+                                    </FormGroup>
+
+                                    <FormGroup row>
+                                        <Col md="3">
+                                            <Label htmlFor="date">Date and time</Label>
+                                        </Col>
+                                        <Col xs="12" md="9">
+                                            <Datetime />;
+                                        </Col>
+                                    </FormGroup>
                                     <Button type="submit" color="primary">Submit</Button>
                                 </form>
                             </CardBody>
@@ -58,4 +119,49 @@ class AddDoctor extends Component {
     }
 }
 
-export default AddDoctor;
+
+/*class ComboboxProfessional extends React.Component {
+    professionals = ["John Smith", "Kate Wolson", "Anatolii Kompotov", "Ahmad Ahmed"];
+    state = {
+        allowCustom: true
+    };
+
+    onChange = (event) => {
+        this.setState({
+            allowCustom: event.target.checked
+        });
+    }
+
+    render() {
+        return (
+            <ComboBox data={this.professionals}  />
+        );
+    }
+}
+
+class ComboboxPet extends React.Component {
+    pets = ["Twinkle", "Jim", "Cinnabon"];
+    state = {
+        allowCustom: true
+    };
+
+    onChange = (event) => {
+        this.setState({
+            allowCustom: event.target.checked
+        });
+    }
+
+    render() {
+        return (
+            <ComboBox data={this.pets} />
+
+        );
+    }
+}*/
+
+/*ReactDOM.render(
+    <AppComponent />,
+    document.querySelector('Petthy')
+);*/
+
+export default AddAppointment;

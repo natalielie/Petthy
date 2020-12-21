@@ -37,6 +37,7 @@ namespace Petthy
         .AddDefaultTokenProviders();*/
 
             services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddIdentityServer().AddApiAuthorization<IdentityUser, ApplicationDbContext>();

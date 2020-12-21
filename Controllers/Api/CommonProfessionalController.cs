@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Petthy.Controllers.Api
 {
-    [Authorize]
     [Route("api/commonProfessional")]
     [ApiController]
     public class CommonProfessionalController : Controller
