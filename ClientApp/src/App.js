@@ -19,9 +19,13 @@ import Schedule from "./components/views/Schedule/Schedules";
 import { withTranslation } from "react-i18next";
 import { NavMenu } from "./components/NavMenu";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import AddAssignment from "./components/views/Assignments/AddAssignment";
 
 
 const ProfessionalsComponent = withTranslation()(Professionals);
+const HomeComponent = withTranslation()(Home);
+const AddAppComponent = withTranslation()(AddAppointment);
+const AddAssComponent = withTranslation()(AddAssignment);
 
 export default class App extends Component {
     static displayName = App.name;
@@ -36,9 +40,10 @@ export default class App extends Component {
         return (
             <Layout>
                 <LanguageSwitcher />
-                <Route path="/appointments-add/" component={AddAppointment} />
+                <Route path="/assignments-add/" component={AddAssComponent} />
+                <Route path="/appointments-add/" component={AddAppComponent} />
                 <Switch>
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" component={HomeComponent} />
                     <Route path="/professionals" component={ProfessionalsComponent} />
                     <Route path="/pets" component={Pets} />
                     <Route path="/assignments" component={Assignments} />

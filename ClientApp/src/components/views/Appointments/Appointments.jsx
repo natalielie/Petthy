@@ -7,12 +7,16 @@ import authService from 'C:/Users/N/FinalPetthy/ClientApp/src/components/api-aut
 import DeleteModal from './DeleteModal';
 import AppointmentApi from '../../services/AppointmentApi';
 import AddAppointment from './AddAppointment';
+import { useTranslation } from 'react-i18next';
+
+
+import { withTranslation } from "react-i18next";
 
 
 function AppointmentRow(props) {
     const appointment = props.appointment
 
-
+    const { t, i18n } = useTranslation();
     return (
         <tr key={appointment.appointmentId.toString()}>
             <th scope="row">{appointment.pet.petName}</th>
@@ -20,7 +24,7 @@ function AppointmentRow(props) {
             <td>{new Date(appointment.dateTimeBegin).toLocaleDateString()} {new Date(appointment.dateTimeBegin).toLocaleTimeString()}</td>
             <td>
                 <Link to={"/appointments/edit/" + appointment.appointmentId} params={{ appointment: appointment }}>
-                    <Button block color="info" size="sm">Edit</Button>
+                    <Button block color="info" size="sm">{t("Edit")}</Button>
                 </Link>
             </td>
             <td>
@@ -81,7 +85,7 @@ class Appointments extends Component {
 
 
     render() {
-
+        const { t } = this.props;
         if (this.state.isAdmin) {
             return (
                 <div className="animated fadeIn">
@@ -89,17 +93,17 @@ class Appointments extends Component {
                         <Col xl={8}>
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Appointments
+                                    <i className="fa fa-align-justify"></i> {t("Appointments")}
                             </CardHeader>
                                 <CardBody>
                                     <Table responsive hover>
                                         <thead>
                                             <tr>
-                                                <th scope="col">Pet Name</th>
-                                                <th scope="col">Professional's Name</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Edit</th>
-                                                <th scope="col">Delete</th>
+                                                <th scope="col">{t("PetName")}</th>
+                                                <th scope="col">{t("ProfessionalsName")}</th>
+                                                <th scope="col">{t("Date")}</th>
+                                                <th scope="col">{t("Edit")}</th>
+                                                <th scope="col">{t("Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -112,9 +116,9 @@ class Appointments extends Component {
                             </Card >
                         </Col >
                     </Row >
-                    <Link to={"/appointments/add/"}>
-                        <Button onClick={AddAppointment} block color="info" size="sm">Add new appointment</Button>
-                    </Link>
+                    <Button>
+                        <Link tag={Link} className="text-dark" to="/appointments-add/" >{t("Add a new appointment")}</Link>
+                    </Button>
                 </div >
                 
 
@@ -129,17 +133,17 @@ class Appointments extends Component {
                         <Col xl={8}>
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Appointments
+                                    <i className="fa fa-align-justify"></i> {t("Appointments")}
                             </CardHeader>
                                 <CardBody>
                                     <Table responsive hover>
                                         <thead>
                                             <tr>
-                                                <th scope="col">Pet Name</th>
-                                                <th scope="col">Professional's Name</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Edit</th>
-                                                <th scope="col">Delete</th>
+                                                <th scope="col">{t("PetName")}</th>
+                                                <th scope="col">{t("ProfessionalsName")}</th>
+                                                <th scope="col">{t("Date")}</th>
+                                                <th scope="col">{t("Edit")}</th>
+                                                <th scope="col">{t("Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -154,7 +158,7 @@ class Appointments extends Component {
                     </Row >
 
                    <Button>
-                        <Link tag={Link} className="text-dark" to="/appointments-add/" > Add a new appointment</Link>
+                        <Link tag={Link} className="text-dark" to="/appointments-add/" >{t("Add a new appointment")}</Link>
                     </Button>
                 </div >
 
@@ -164,5 +168,5 @@ class Appointments extends Component {
     }
 }
 
-export default Appointments;
+export default withTranslation()(Appointments);
 

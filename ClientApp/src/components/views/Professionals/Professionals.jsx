@@ -27,7 +27,7 @@ function ProfessionalRow(props) {
                 <td>{t("Veterinerian")}</td>
             <td>
                 <Link to={"/professionals/edit/" + professional.professionalId} params={{ professional: professional }}>
-                    <Button block color="info" size="sm">Edit</Button>
+                        <Button block color="info" size="sm">{t("Edit")}</Button>
                 </Link>
             </td>
             <td>
@@ -44,7 +44,7 @@ function ProfessionalRow(props) {
                 <td>{t("Specialist")}</td>
             <td>
                 <Link to={"/professionals/edit/" + professional.professionalId} params={{ professional: professional }}>
-                    <Button block color="info" size="sm">Edit</Button>
+                        <Button block color="info" size="sm">{t("Edit")}</Button>
                 </Link>
             </td>
             <td>

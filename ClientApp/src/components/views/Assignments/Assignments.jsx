@@ -6,18 +6,15 @@ import { Button, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap'
 
 import DeleteModal from './DeleteModal';
 import AssignmentApi from '../../services/AssignmentApi';
+import { useTranslation } from 'react-i18next';
+
+
+import { withTranslation } from "react-i18next";
 
 function AssignmentRow(props) {
     const assignment = props.assignment
     const assignmentLink = `/assignments/${assignment.pet.petId}`
-
-    const getBadge = (status) => {
-        return status === 'Active' ? 'success' :
-            status === 'Inactive' ? 'secondary' :
-                status === 'Pending' ? 'warning' :
-                    status === 'Banned' ? 'danger' :
-                        'primary'
-    }
+    const { t, i18n } = useTranslation();
 
         return (
             <tr key={assignment.professional.professionalId.toString()}>
@@ -74,21 +71,22 @@ class Assignments extends Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             <div className="animated fadeIn">
                 <Row>
                     <Col xl={8}>
                         <Card>
                             <CardHeader>
-                                <i className="fa fa-align-justify"></i> Assignments
+                                <i className="fa fa-align-justify"></i> {t("Assignments")}
                             </CardHeader>
                             <CardBody>
                                 <Table responsive hover>
                                     <thead>
                                         <tr>
-                                            <th scope="col">Pet Name</th>
-                                            <th scope="col">Professional's Name</th>
-                                            <th scope="col">Terminate</th>
+                                            <th scope="col">{t("PetName")}</th>
+                                            <th scope="col">{t("ProfessionalsName")}</th>
+                                            <th scope="col">{t("Terminate")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -101,6 +99,9 @@ class Assignments extends Component {
                         </Card>
                     </Col>
                 </Row>
+                <Button>
+                    <Link tag={Link} className="text-dark" to="/assignments-add/" >{t("Add Assignment")}</Link>
+                </Button>
             </div>
         )
     }
@@ -108,4 +109,4 @@ class Assignments extends Component {
 
 
 
-export default Assignments;
+export default withTranslation()(Assignments);

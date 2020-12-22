@@ -42,7 +42,9 @@ namespace Petthy
 
             services.AddIdentityServer().AddApiAuthorization<IdentityUser, ApplicationDbContext>();
 
-            services.AddAuthentication().AddIdentityServerJwt();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerJwt()
+            .AddCookie(); 
 
             services.Configure<JwtBearerOptions>(
         IdentityServerJwtConstants.IdentityServerJwtBearerScheme,

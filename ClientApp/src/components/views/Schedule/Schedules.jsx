@@ -4,35 +4,53 @@ import { Button, Card, CardBody, CardHeader, Col, Row, Table } from 'reactstrap'
 
 import DeleteModal from './DeleteModal';
 import ScheduleApi from '../../services/ScheduleApi';
+import { useTranslation } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
+import i18next from "i18next";
 
 function ScheduleRow(props) {
     const schedule = props.schedule
     const scheduleLink = `/schedule/${schedule.petId}`
+    const { t, i18n } = useTranslation();
+    var dateFormat = require("dateformat");
 
-    const getBadge = (status) => {
-        return status === 'Active' ? 'success' :
-            status === 'Inactive' ? 'secondary' :
-                status === 'Pending' ? 'warning' :
-                    status === 'Banned' ? 'danger' :
-                        'primary'
+    if (i18next.language == "en") {
+        
+        return (
+
+            <tr key={schedule.professional.professionalId.toString()}>
+                <th scope="row">{schedule.professional.firstName} {schedule.professional.lastName}</th>
+                <td>{dateFormat(schedule.dateTimeBegin, "yyyy/mm/dd")} {dateFormat(schedule.dateTimeBegin, "h:MM TT")}</td>
+                <td>{dateFormat(schedule.dateTimeEnd, "yyyy/mm/dd")} {dateFormat(schedule.dateTimeEnd, "h:MM TT")}</td>
+                <td>
+                    <Link to={"/schedule/edit/" + schedule.dateTimeBegin} params={{ schedule: schedule }}>
+                        <Button block color="info" size="sm">{t("Edit")}</Button>
+                    </Link>
+                </td>
+                <td>
+                    <DeleteModal onDelete={() => props.deleteSchedulesHandler(schedule.dateTimeBegin)} />
+                </td>
+            </tr>
+        )
     }
-
-    return (
-        <tr key={schedule.professional.professionalId.toString()}>
-            <th scope="row">{schedule.professional.professionalId}</th>
-            <td>{schedule.professional.firstName} {schedule.professional.lastName}</td>
-            <td>{new Date(schedule.schedule.dateTimeBegin).toLocaleDateString()} {new Date(schedule.schedule.dateTimeBegin).toLocaleTimeString()}</td>
-            <td>{new Date(schedule.schedule.dateTimeEnd).toLocaleDateString()} {new Date(schedule.schedule.dateTimeEnd).toLocaleTimeString()}</td>
-            <td>
-                <Link to={"/schedule/edit/" + schedule.schedule.dateTimeBegin} params={{ schedule: schedule }}>
-                    <Button block color="info" size="sm">Edit</Button>
-                </Link>
-            </td>
-            <td>
-                <DeleteModal onDelete={() => props.deleteSchedulesHandler(schedule.schedule.dateTimeBegin)} />
-            </td>
-        </tr>
-    )
+    else {
+        return (
+            <tr key={schedule.professional.professionalId.toString()}>
+                <th scope="row">{schedule.professional.firstName} {schedule.professional.lastName}</th>
+                <td>{dateFormat(schedule.dateTimeBegin, "dd-mm-yyyy")} {dateFormat(schedule.dateTimeBegin, "HH:MM")}</td>
+                <td>{dateFormat(schedule.dateTimeEnd, "dd-mm-yyyy")}  {dateFormat(schedule.dateTimeEnd, "HH:MM")}</td>
+                <td>
+                    <Link to={"/schedule/edit/" + schedule.dateTimeBegin} params={{ schedule: schedule }}>
+                        <Button block color="info" size="sm">{t("Edit")}</Button>
+                    </Link>
+                </td>
+                <td>
+                    <DeleteModal onDelete={() => props.deleteSchedulesHandler(schedule.dateTimeBegin)} />
+                </td>
+            </tr>
+        )
+    }
+    
 }
 
 class Schedules extends Component {
@@ -61,23 +79,24 @@ class Schedules extends Component {
 
 
     render() {
+        const { t } = this.props;
         return (
             <div className="animated fadeIn">
                 <Row>
                     <Col xl={8}>
                         <Card>
                             <CardHeader>
-                                <i className="fa fa-align-justify"></i> Schedule
+                                <i className="fa fa-align-justify"></i> {t("My Schedule")}
                             </CardHeader>
                             <CardBody>
                                 <Table responsive hover>
                                     <thead>
                                         <tr>
-                                            <th scope="col">Professional's Name</th>
-                                            <th scope="col">Begin Date</th>
-                                            <th scope="col">End Date</th>
-                                            <th scope="col">Edit</th>
-                                            <th scope="col">Delete</th>
+                                            <th scope="col">{t("ProfessionalsName")}</th>
+                                            <th scope="col">{t("Begin Date")}</th>
+                                            <th scope = "col" > {t("End Date")}</th>
+                                            <th scope="col">{t("Edit")}</th>
+                                            <th scope="col">{t("Delete")}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -97,4 +116,4 @@ class Schedules extends Component {
 
 
 
-export default Schedules;
+export default withTranslation()(Schedules);

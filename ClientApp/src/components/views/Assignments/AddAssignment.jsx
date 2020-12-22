@@ -1,9 +1,7 @@
-import React, { Component, useState } from 'react';
+﻿import React, { Component, useState } from 'react';
+import { withTranslation } from 'react-i18next';
 import { Button, Card, CardBody, CardHeader, Col, FormGroup, Label, Input, Row, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import AppointmentApi from '../../services/AppointmentApi';
-import Datetime from 'react-datetime';
-import { withTranslation } from "react-i18next";
-
+import AssignmentApi from '../../services/AssignmentApi';
 
 
 const ComboboxProfessional = (props) => {
@@ -85,7 +83,7 @@ const ComboboxPet = (props) => {
 }
 
 
-class AddAppointment extends Component {
+class AddAssignment extends Component {
 
     constructor() {
         super();
@@ -95,21 +93,20 @@ class AddAppointment extends Component {
     }
 
     componentDidMount() {
-        document.title = "Add Appointment";
+        document.title = "Add Assignment";
     }
 
-    addAppointmentHandler = (appointment, callback) => AppointmentApi.addAppointment(appointment, callback);
+    addAppointmentHandler = (appointment, callback) => AssignmentApi.addAssignment(appointment, callback);
 
     handleSubmit = (event) => {
         event.preventDefault();
 
         var data = {
             name: event.target.elements['professional'].value,
-            pet: event.target.elements['pet'].value,
-            date: event.target.elements['date'].value
+            pet: event.target.elements['pet'].value
         };
-        
-        this.addAppointmentHandler(data, () => this.props.history.push('/appointments'));
+
+        this.addAppointmentHandler(data, () => this.props.history.push('/assignments'));
     }
 
     render() {
@@ -120,7 +117,7 @@ class AddAppointment extends Component {
                     <Col xs="12" md="7">
                         <Card>
                             <CardHeader>
-                                <strong>{t("Add a new appointment")}</strong>
+                                <strong>{t("Add Assignment")}</strong>
                             </CardHeader>
                             <CardBody>
                                 <form onSubmit={this.handleSubmit} className="form-horizontal">
@@ -142,14 +139,7 @@ class AddAppointment extends Component {
                                         </Col>
                                     </FormGroup>
 
-                                    <FormGroup row>
-                                        <Col md="3">
-                                            <Label htmlFor="date">{t("Date and time")}</Label>
-                                        </Col>
-                                        <Col xs="12" md="9">
-                                            <Datetime />;
-                                        </Col>
-                                    </FormGroup>
+                                    
                                     <Button type="submit" color="primary">{t("Submit")}</Button>
                                 </form>
                             </CardBody>
@@ -162,4 +152,4 @@ class AddAppointment extends Component {
 }
 
 
-export default withTranslation()(AddAppointment);
+export default withTranslation()(AddAssignment);

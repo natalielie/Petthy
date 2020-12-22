@@ -12,6 +12,7 @@ import ClientApi from '../../services/ClientApi';
 import utils from '../../utils';
 import DeleteModal from './DeleteModal';
 import { useTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 
 
@@ -31,9 +32,7 @@ function PetRow(props) {
 
     const pet = props.pet
     const owner = props.pet.owner
-    const petLink = `/pets/${pet.pet.petId}`
-    //const petOwner = props.client
-    //const petOwnerLink = `/clients/${pet.clientId}`
+    const petLink = `/pets/${pet.pet.petId}`;
     const { t, i18n } = useTranslation();
 
     if (isAdmin()) {
@@ -48,7 +47,7 @@ function PetRow(props) {
 
                 <td>
                     <Link to={"/pets/edit/" + pet.pet.petId} params={{ pet: pet }}>
-                        <Button block color="info" size="sm">Edit</Button>
+                        <Button block color="info" size="sm">{t("Edit")}</Button>
                     </Link>
                 </td>
                 <td>
@@ -102,8 +101,6 @@ class Pets extends Component {
 
     updatePetsHandler = () => PetApi.getPetsAndOwners(pets => this.setState({ pets: pets}));
 
-   // updateClientsHandler = () => ClientApi.getClients(clients => this.setState({ clients: clients }));
-
     addPetHandler = (pet) => PetApi.addPet(pet, this.updatePetsHandler);
 
     editPetHandler = (pet) => PetApi.editPet(pet, this.updatePetsHandler);
@@ -112,6 +109,7 @@ class Pets extends Component {
 
 
     render() {
+        const { t } = this.props;
         if (this.state.isAdmin) {
             return (
                 <div className="animated fadeIn">
@@ -119,19 +117,19 @@ class Pets extends Component {
                         <Col xl={8}>
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Pets
+                                    <i className="fa fa-align-justify"></i> {t("Pets")}
                             </CardHeader>
                                 <CardBody>
                                     <Table responsive hover>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Id</th>
-                                                <th scope="col">Pet Name</th>
-                                                <th scope="col">Kind</th>
-                                                <th scope="col">Gender</th>
-                                                <th scope="col">Pet Owner Name</th>
-                                                <th scope="col">Edit</th>
-                                                <th scope="col">Delete</th>
+                                                <th scope="col">{t("PetName")}</th>
+                                                <th scope="col">{t("Kind")}</th>
+                                                <th scope="col">{t("Gender")}</th>
+                                                <th scope="col">{t("Pet Owner Name")}</th>
+                                                <th scope="col">{t("Edit")}</th>
+                                                <th scope="col">{t("Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -154,17 +152,19 @@ class Pets extends Component {
                         <Col xl={8}>
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Pets
+                                    <i className="fa fa-align-justify"></i> {t("Pets")}
                             </CardHeader>
                                 <CardBody>
                                     <Table responsive hover>
                                         <thead>
                                             <tr>
                                                 <th scope="col">Id</th>
-                                                <th scope="col">Pet Name</th>
-                                                <th scope="col">Kind</th>
-                                                <th scope="col">Gender</th>
-                                                <th scope="col">Pet Owner Name</th>
+                                                <th scope="col">{t("PetName")}</th>
+                                                <th scope="col">{t("Kind")}</th>
+                                                <th scope="col">{t("Gender")}</th>
+                                                <th scope="col">{t("Pet Owner Name")}</th>
+                                                <th scope="col">{t("Edit")}</th>
+                                                <th scope="col">{t("Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -183,4 +183,4 @@ class Pets extends Component {
     }
 }
 
-export default Pets;
+export default withTranslation()(Pets);

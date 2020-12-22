@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { withTranslation } from "react-i18next";
 
 class DeleteModal extends React.Component {
     constructor(props) {
@@ -18,17 +19,18 @@ class DeleteModal extends React.Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <div>
-                <Button color="danger" size="sm" onClick={this.toggle}>Delete</Button>
+                <Button color="danger" size="sm" onClick={this.toggle}>{t("Delete")}</Button>
                 <Modal isOpen={this.state.modal} toggle={this.toggle}>
-                    <ModalHeader toggle={this.toggle}>Confirmation</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>{t("Confirmation")}</ModalHeader>
                     <ModalBody>
-                        Are you sure?
+                        {t("Are you sure?")}
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="danger" onClick={() => {this.toggle(); this.props.onDelete() }}>Delete</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                        <Button color="danger" onClick={() => { this.toggle(); this.props.onDelete() }}>{t("Delete")}</Button>{' '}
+                        <Button color="secondary" onClick={this.toggle}>{t("Cancel")}</Button>
                     </ModalFooter>
                 </Modal>
             </div>
@@ -36,4 +38,4 @@ class DeleteModal extends React.Component {
     }
 }
 
-export default DeleteModal;
+export default withTranslation()(DeleteModal);
