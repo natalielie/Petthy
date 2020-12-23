@@ -1,0 +1,10 @@
+﻿{
+  "translations": {
+    "home": "Домой",
+    "name": "Ім'я",
+    "professionalRole": "Посада",
+    "edit": "Відредагувати",
+    "delete": "Видалити",
+    "veterinerian" : "Ветеринар"
+  }
+}

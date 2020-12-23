@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
 
 namespace Petthy.Areas.Identity.Pages.Account
 {
@@ -85,6 +86,10 @@ namespace Petthy.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    if(Input.Email == "admin@gmail.com")
+                    {
+
+                    }
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
