@@ -84,15 +84,16 @@ namespace Petthy.Controllers.Api
         [Route("addMedNote")]
         public void addMedNote(MedNoteRequestModel request)
         {
-            if (IsUserAssignedToPet(request.PetId))
+            int petId = 1;
+            if (IsUserAssignedToPet(petId))
             {
                 PetMedCardNote medCardNote = new PetMedCardNote
                 {
-                    PetId = request.PetId,
+                    PetId = petId,
                     Illness = request.Illness,
                     Treatment = request.Treatment,
                     Comment = request.Comment,
-                    NoteDate = request.NoteDate
+                    NoteDate = DateTime.Now
                 };
 
                 _dbContext.PetMedCardNotes.Add(medCardNote);
@@ -106,14 +107,15 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getMedNote")]
-        public List<MedNoteResponseModel> getPetMedNotes(int petId)
+        public List<MedNoteResponseModel> getPetMedNotes()
         {
+            int petId = 1;
             if (IsUserAssignedToPet(petId))
             {
                 List<PetMedCardNote> medNotes = _dbContext.PetMedCardNotes.Where(x => x.PetId == petId).ToList();
-
+                Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == petId);
                 List<MedNoteResponseModel> responseModels = medNotes
-                    .Select(x => new MedNoteResponseModel(x.PetMedCardNoteId, x.PetId,
+                    .Select(x => new MedNoteResponseModel(x.PetMedCardNoteId, x.PetId, pet.PetName,
                     x.Illness, x.Treatment, x.Comment, x.NoteDate))
                     .ToList();
                 return responseModels;
@@ -322,7 +324,7 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getProfessionalSchedule")]
-        public List<Schedule> GetProfessionalAppointments()
+        public List<PetAndProfessional> GetProfessionalAppointments()
         {
             string userIdStringified = id;
             Professional currentUser = _dbContext.Professionals.SingleOrDefault(x => x.UserId == userIdStringified);
@@ -332,17 +334,20 @@ namespace Petthy.Controllers.Api
 
             List<Pet> pets = _dbContext.Pets.ToList();
 
-            List<Schedule> petsAndProfessionals = new List<Schedule>();
+
+            List<PetAndProfessional> petsAndProfessionals = new List<PetAndProfessional>();
             foreach (var appointment in professionalAppointments)
             {
                 DateTime currentTime = DateTime.Now;
                 if (appointment.Date >= currentTime)
                 {
                     Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == appointment.PetId);
-                    petsAndProfessionals.Add(new Schedule
+                    Professional professional = _dbContext.Professionals.SingleOrDefault(
+                        x => x.ProfessionalId == appointment.ProfessionalId);
+                    petsAndProfessionals.Add(new PetAndProfessional
                     {
-                        //AppointmentId = appointment.AppointmentId,
-                        //Pet = pet,
+                        AppointmentId = appointment.AppointmentId,
+                        Pet = pet,
                         Professional = currentUser,
                         DateTimeBegin = appointment.Date
                     });
@@ -350,6 +355,8 @@ namespace Petthy.Controllers.Api
             }
 
             return petsAndProfessionals;
+
+
         }
 
 
@@ -362,19 +369,19 @@ namespace Petthy.Controllers.Api
 
             List<Schedule> vacantSchedule = getVacantDatesOfSchedule();
 
-
-            if (vacantSchedule.Any(x => x.DateTimeBegin == request.AppointmentDateTime))
+            DateTime date = DateTime.Parse("2020-12-24T11:00:00");
+            if (vacantSchedule.Any(x => x.DateTimeBegin == date))
             {
                 Appointment appointment = new Appointment
                 {
-                    PetId = request.PetId,
+                    PetId = 1,
                     ProfessionalId = currentUser.ProfessionalId,
-                    Date = request.AppointmentDateTime
+                    Date = date
                 };
 
                 ProfessionalSchedule vacantDate = _dbContext.ProfessionalSchedules.SingleOrDefault(x =>
                             x.ProfessionalId == currentUser.ProfessionalId
-                            && x.DateTimeBegin == request.AppointmentDateTime);
+                            && x.DateTimeBegin == date);
 
 
                 _dbContext.Appointments.Add(appointment);

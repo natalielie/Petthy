@@ -16,7 +16,7 @@ class ScheduleApi {
             .catch(ScheduleApi.errorHandler); 
     }
 
-    // ready
+
     static addVacantSchedule = (dateTimeBegin, dateTimeEnd, callback) => {
         Axios.post('api/doctor/addVacantDatesToSchedule', dateTimeBegin, dateTimeEnd)
             .then(() => ScheduleApi.getFreeSchedule(callback))

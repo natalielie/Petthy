@@ -109,6 +109,9 @@ class Schedules extends Component {
                         </Card>
                     </Col>
                 </Row>
+                <Button class="btn btn-primary" style={{ marginTop: 20 }}>
+                    <Link tag={Link} className="text-dark" to="/schedules/" >{t("Add Dates")}</Link>
+                </Button>
             </div>
         )
     }

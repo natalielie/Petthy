@@ -54,6 +54,7 @@ i18n
                     "Add Assignment": "Add Assignment",
                     Submit: "Submit",
                     "Date and time": "Date and time",
+                    "Add Dates": "Add Dates",
 
                     Hello: "Hello",
                     Register: "Register",
@@ -62,7 +63,10 @@ i18n
 
                     Confirmation: "Confirmation",
                     Cancel: "Cancel",
-                    "Are you sure?": "Are you sure?"
+                    "Are you sure?": "Are you sure?",
+
+                    "Pet's medcard": "Pet's medcard",
+                    "Pet's diary": "Pet's diary"
                 },
             },
             ua: {
@@ -107,6 +111,7 @@ i18n
                     "Add Assignment": "Заключити договір",
                     Submit: "Підтвердити",
                     "Date and time": "Дата та час",
+                    "Add Dates": "Додати дати",
 
                     Hello: "Привіт,",
                     Register: "Зареєструватися",
@@ -115,8 +120,10 @@ i18n
 
                     Confirmation: "Підтвердження",
                     Cancel: "Відмінити",
-                    "Are you sure?": "Ви впевнені?"
+                    "Are you sure?": "Ви впевнені?",
 
+                    "Pet's medcard": "Медична картка тварини",
+                    "Pet's diary": "Щоденник  тварини"
                 },
             },
         }, 

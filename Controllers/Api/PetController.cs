@@ -95,11 +95,14 @@ namespace Petthy.Controllers.Api
 
         [HttpGet]
         [Route("getSinglePet")]
-        public Pet getSinglePet(int petId)
+        public PetAndOwner getSinglePet()
         {
-            Pet responseModel = _dbContext.Pets.SingleOrDefault(x => x.PetId == petId);
+            Pet pet = _dbContext.Pets.SingleOrDefault(x => x.PetId == 1);
 
-            return responseModel;
+            Client owner = _dbContext.Clients.SingleOrDefault(x => x.ClientId == pet.ClientId);
+            PetAndOwner petsAndOwners = new PetAndOwner { Pet = pet, Owner = owner };
+
+            return petsAndOwners;
         }
 
         public List<PetAssignmentResponseModel> getVeterineriansAssignments(int myId)

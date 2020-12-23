@@ -32,6 +32,10 @@ const ComboboxProfessional = (props) => {
             label: "Ahmad Amshanov",
             value: 4,
         },
+        {
+            label: "Troye Bull",
+            value: 5,
+        },
     ];
 
     return (
@@ -102,14 +106,14 @@ class AddAppointment extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
+        var appdate = new Date("12/24/2020T11:00:00");
         var data = {
-            name: event.target.elements['professional'].value,
-            pet: event.target.elements['pet'].value,
-            date: event.target.elements['date'].value
+            name: 1,
+            pet: 1,
+            date: appdate
         };
         
-        this.addAppointmentHandler(data, () => this.props.history.push('/appointments'));
+        this.addAppointmentHandler(data, () => this.props.history.push('/appointments/'));
     }
 
     render() {

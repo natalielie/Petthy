@@ -32,7 +32,7 @@ function PetRow(props) {
 
     const pet = props.pet
     const owner = props.pet.owner
-    const petLink = `/pets/${pet.pet.petId}`;
+    const petLink = `/pet/${pet.pet.petId}`;
     const { t, i18n } = useTranslation();
 
     if (isAdmin()) {
@@ -163,8 +163,6 @@ class Pets extends Component {
                                                 <th scope="col">{t("Kind")}</th>
                                                 <th scope="col">{t("Gender")}</th>
                                                 <th scope="col">{t("Pet Owner Name")}</th>
-                                                <th scope="col">{t("Edit")}</th>
-                                                <th scope="col">{t("Delete")}</th>
                                             </tr>
                                         </thead>
                                         <tbody>

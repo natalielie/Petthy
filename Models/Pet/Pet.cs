@@ -19,8 +19,6 @@ namespace Petthy.Models.Pet
 
         [ForeignKey("ClientId")]
         public int ClientId { get; set; }
-        public PetDiaryNote[] PetDiaryNotes { get; set; }
-        public PetMedCardNote[] PetMedCardNotes { get; set; }
 
         //public Pet(int id, string name, string animalKind, string sex, int age)
         //{

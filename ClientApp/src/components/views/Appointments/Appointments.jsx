@@ -15,13 +15,14 @@ import { withTranslation } from "react-i18next";
 
 function AppointmentRow(props) {
     const appointment = props.appointment
-
+    
+    var dateFormat = require("dateformat");
     const { t, i18n } = useTranslation();
     return (
-        <tr key={appointment.appointmentId.toString()}>
+        <tr key={appointment.professional.professionalId.toString()}>
             <th scope="row">{appointment.pet.petName}</th>
             <td>{appointment.professional.firstName} {appointment.professional.lastName}</td>
-            <td>{new Date(appointment.dateTimeBegin).toLocaleDateString()} {new Date(appointment.dateTimeBegin).toLocaleTimeString()}</td>
+            <td>{dateFormat(appointment.dateTimeBegin, "yyyy/mm/dd")} {dateFormat(appointment.dateTimeBegin, "h:MM TT")}</td>
             <td>
                 <Link to={"/appointments/edit/" + appointment.appointmentId} params={{ appointment: appointment }}>
                     <Button block color="info" size="sm">{t("Edit")}</Button>
@@ -116,7 +117,7 @@ class Appointments extends Component {
                             </Card >
                         </Col >
                     </Row >
-                    <Button>
+                    <Button class="btn btn-primary" style={{ marginTop: 20 }}>
                         <Link tag={Link} className="text-dark" to="/appointments-add/" >{t("Add a new appointment")}</Link>
                     </Button>
                 </div >
@@ -157,7 +158,7 @@ class Appointments extends Component {
                         </Col >
                     </Row >
 
-                   <Button>
+                    <Button class="btn btn-primary" style={{ marginTop: 20 }}>
                         <Link tag={Link} className="text-dark" to="/appointments-add/" >{t("Add a new appointment")}</Link>
                     </Button>
                 </div >

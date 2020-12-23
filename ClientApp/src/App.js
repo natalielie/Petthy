@@ -20,6 +20,9 @@ import { withTranslation } from "react-i18next";
 import { NavMenu } from "./components/NavMenu";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import AddAssignment from "./components/views/Assignments/AddAssignment";
+import PetMedNotes from "./components/views/PetMedNotes/PetMedNotes";
+import Pet from "./components/views/Clients/Pet";
+import AddPetMedNote from "./components/views/PetMedNotes/AddPetMedNote";
 
 
 const ProfessionalsComponent = withTranslation()(Professionals);
@@ -40,8 +43,11 @@ export default class App extends Component {
         return (
             <Layout>
                 <LanguageSwitcher />
+                <Route path="/petMedNote-add/" component={AddPetMedNote} />
                 <Route path="/assignments-add/" component={AddAssComponent} />
                 <Route path="/appointments-add/" component={AddAppComponent} />
+                <Route path="/medcard/" component={PetMedNotes} />
+                <Route path="/pet/" component={Pet} />
                 <Switch>
                     <Route exact path="/" component={HomeComponent} />
                     <Route path="/professionals" component={ProfessionalsComponent} />
@@ -53,7 +59,7 @@ export default class App extends Component {
                 </Switch>
 
                 
-            </Layout>
+            </Layout> 
             
         );
     }

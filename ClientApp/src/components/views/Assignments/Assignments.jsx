@@ -13,12 +13,12 @@ import { withTranslation } from "react-i18next";
 
 function AssignmentRow(props) {
     const assignment = props.assignment
-    const assignmentLink = `/assignments/${assignment.pet.petId}`
+    const assignmentLink = `/pet/${assignment.pet.petId}`
     const { t, i18n } = useTranslation();
 
         return (
             <tr key={assignment.professional.professionalId.toString()}>
-                <th scope="row">{assignment.pet.petName}</th>
+                <th scope="row"><Link to={assignmentLink}>{assignment.pet.petName}</Link></th>
                 <td>{assignment.professional.firstName} {assignment.professional.lastName}</td>
                 <td>
                     <DeleteModal onDelete={() => props.deleteAssignmentHandler(
@@ -99,7 +99,7 @@ class Assignments extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <Button>
+                <Button class="btn btn-primary" style={{ marginTop: 20 }}>
                     <Link tag={Link} className="text-dark" to="/assignments-add/" >{t("Add Assignment")}</Link>
                 </Button>
             </div>

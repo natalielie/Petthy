@@ -10,8 +10,8 @@ class PetApi {
     }
 
   
-    static getPet = (id, callback) => {
-        Axios.get('api/pet/getSinglePet' + id)
+    static getPet = (callback) => {
+        Axios.get('api/pet/getSinglePet')
             .then(res => callback(res.data))
             .catch(PetApi.errorHandler);
     }
